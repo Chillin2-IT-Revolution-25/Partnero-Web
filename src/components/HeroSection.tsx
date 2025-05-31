@@ -1,5 +1,6 @@
 import { ArrowRight } from 'lucide-react'
 import HeroImg from "../assets/images/Hero_image.png"
+import PartnersImg from "../assets/images/Partners.png"
 
 interface HeroSectionProps {
   onBrowseClick?: () => void
@@ -19,8 +20,23 @@ export default function HeroSection({ onBrowseClick }: HeroSectionProps) {
         @import url('https://fonts.googleapis.com/css2?family=K2D:wght@400;700;800&family=Lato:wght@400;700&family=Kanit:wght@400;500;600;700&display=swap');
       `}</style>
       
-      <section className="relative bg-white py-8 sm:py-12 lg:py-16">
-        <div className="max-w-[95%] mx-auto px-4 sm:px-8 md:px-12 lg:px-16">
+      <section className="relative bg-white py-8 sm:py-12 lg:py-16 overflow-hidden w-full">
+        {/* Background Image */}
+        <div className="absolute flex items-start justify-center pointer-events-none select-none mt-[26%] w-full">
+          <img 
+            src={PartnersImg.src}
+            alt="Partners Background"
+            className="opacity-100 object-contain w-full h-full"
+            style={{ 
+              zIndex: 1,
+              // maxWidth: 'min(90vw, 800px)',
+              maxHeight: 'min(50vh, 400px)',
+              transform: 'translateY(-10%)'
+            }}
+          />
+        </div>
+
+        <div className="max-w-[95%] mx-auto px-4 sm:px-8 md:px-12 lg:px-16 relative z-10">
           <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 items-center">
             {/* Left Content */}
             <div className="space-y-6 sm:space-y-8 lg:space-y-10 text-center lg:text-left">
@@ -39,7 +55,7 @@ export default function HeroSection({ onBrowseClick }: HeroSectionProps) {
               <div>
                 <button
                   onClick={handleGetStarted}
-                  className="bg-black text-white px-6 sm:px-8 lg:px-9 py-3 sm:py-3 lg:py-3 rounded-full font-medium text-base sm:text-lg hover:bg-gray-800 transition-colors duration-200"
+                  className="bg-black text-white px-6 sm:px-8 lg:px-9 py-4 sm:py-4 lg:py-6 rounded-full font-medium text-base sm:text-lg hover:bg-gray-800 transition-colors duration-200"
                   style={{ fontFamily: 'Lato, sans-serif' }}
                 >
                   GET STARTED
@@ -60,7 +76,7 @@ export default function HeroSection({ onBrowseClick }: HeroSectionProps) {
           </div>
 
           {/* Description Text */}
-          <div className='mt-8 sm:mt-12 lg:mt-16'>
+          <div className='mt-10 sm:mt-14 lg:mt-18'>
             <div className="flex flex-col lg:flex-row gap-6 lg:gap-0">
               {/* Left Column */}
                 <div className="w-full lg:w-[40%] order-2 lg:order-1">
