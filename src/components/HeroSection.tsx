@@ -1,6 +1,6 @@
 import { ArrowRight } from 'lucide-react'
 import HeroImg from "../assets/images/Hero_image.png"
-import PartnersImg from "../assets/images/Partners.png"
+import PartnersImg from "../assets/images/partners.png"
 
 interface HeroSectionProps {
   onBrowseClick?: () => void
