@@ -79,11 +79,11 @@ export default function FilterSidebar({ isOpen, onClose, filters, onFilterChange
       )}
 
       {/* Sidebar */}
-      <div className={`fixed top-0 right-0 h-full w-96 bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-in-out ${
+      <div className={`fixed top-16 right-0 h-[calc(100vh-4rem)] w-full sm:w-96 bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-in-out ${
         isOpen ? 'translate-x-0' : 'translate-x-full'
       }`}>
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200">
+        <div className="flex items-center justify-between p-4 border-b border-gray-200">
           <h2 className="text-xl font-semibold text-gray-900">Filters</h2>
           <button
             onClick={onClose}
@@ -94,7 +94,7 @@ export default function FilterSidebar({ isOpen, onClose, filters, onFilterChange
         </div>
 
         {/* Filter Content */}
-        <div className="p-6 space-y-6 overflow-y-auto h-full pb-32">
+        <div className="p-6 space-y-6 overflow-y-auto h-full pb-48">
           {/* Category Filter */}
           <div>
             <label className="flex items-center text-sm font-medium text-gray-900 mb-3">
@@ -218,7 +218,7 @@ export default function FilterSidebar({ isOpen, onClose, filters, onFilterChange
         </div>
 
         {/* Footer Actions */}
-        <div className="absolute bottom-0 left-0 right-0 p-6 bg-white border-t border-gray-200">
+        <div className="absolute bottom-[-15px] left-0 right-0 p-6 bg-white border-t border-gray-200">
           <div className="flex space-x-3">
             <button
               onClick={handleClearFilters}
