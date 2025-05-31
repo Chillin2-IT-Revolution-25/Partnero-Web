@@ -19,13 +19,13 @@ export default function HeroSection({ onBrowseClick }: HeroSectionProps) {
         @import url('https://fonts.googleapis.com/css2?family=K2D:wght@400;700;800&family=Lato:wght@400;700&family=Kanit:wght@400;500;600;700&display=swap');
       `}</style>
       
-      <section className="relative bg-white py-12 lg:py-16">
-        <div className="max-w-[95%] mx-auto px-8 sm:px-12 lg:px-16">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+      <section className="relative bg-white py-8 sm:py-12 lg:py-16">
+        <div className="max-w-[95%] mx-auto px-4 sm:px-8 md:px-12 lg:px-16">
+          <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 items-center">
             {/* Left Content */}
-            <div className="space-y-10">
+            <div className="space-y-6 sm:space-y-8 lg:space-y-10 text-center lg:text-left">
               {/* Main Headline */}
-                <h1 className="text-6xl md:text-7xl lg:text-9xl font-black" style={{ fontFamily: 'Kanit, sans-serif' }}>
+                <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-9xl font-black leading-none" style={{ fontFamily: 'Kanit, sans-serif' }}>
                   <span className="text-black">SEARCH FOR</span>
                   <br />
                   <span className="text-black">COLLAB.</span>
@@ -39,7 +39,7 @@ export default function HeroSection({ onBrowseClick }: HeroSectionProps) {
               <div>
                 <button
                   onClick={handleGetStarted}
-                  className="bg-black text-white px-9 py-3 rounded-full font-medium text-lg hover:bg-gray-800 transition-colors duration-200"
+                  className="bg-black text-white px-6 sm:px-8 lg:px-9 py-3 sm:py-3 lg:py-3 rounded-full font-medium text-base sm:text-lg hover:bg-gray-800 transition-colors duration-200"
                   style={{ fontFamily: 'Lato, sans-serif' }}
                 >
                   GET STARTED
@@ -48,8 +48,8 @@ export default function HeroSection({ onBrowseClick }: HeroSectionProps) {
             </div>
 
             {/* Right Image */}
-            <div className="relative">
-              <div className="rounded-[60px] overflow-hidden shadow-lg">
+            <div className="relative order-first lg:order-last">
+              <div className="rounded-[30px] sm:rounded-[40px] lg:rounded-[60px] overflow-hidden shadow-lg">
                 <img
                   src={HeroImg.src}
                   alt="Business professionals shaking hands"
@@ -60,11 +60,11 @@ export default function HeroSection({ onBrowseClick }: HeroSectionProps) {
           </div>
 
           {/* Description Text */}
-          <div className='mt-16'>
-            <div className="flex flex-row">
+          <div className='mt-8 sm:mt-12 lg:mt-16'>
+            <div className="flex flex-col lg:flex-row gap-6 lg:gap-0">
               {/* Left Column */}
-                <div className="h-full w-[40%]">
-                  <p className="text-gray-700 leading-relaxed text-left mt-3" style={{ fontFamily: 'Lato, sans-serif', fontSize: '20px' }}>
+                <div className="w-full lg:w-[40%] order-2 lg:order-1">
+                  <p className="text-gray-700 leading-relaxed text-center lg:text-left text-base sm:text-lg lg:text-xl mt-0 lg:mt-3" style={{ fontFamily: 'Lato, sans-serif' }}>
                     Our website allows you to promote your business and
                     collaborate with other businesses that pursue common
                     goals. Search quickly and conveniently, and don't forget
@@ -75,8 +75,8 @@ export default function HeroSection({ onBrowseClick }: HeroSectionProps) {
                 </div>
 
               {/* Right Column */}
-                <div className="h-full w-[60%]">
-                  <h2 className="text-5xl md:text-6xl lg:text-7xl font-normal leading-tight text-right" style={{ fontFamily: 'K2D, sans-serif' }}>
+                <div className="w-full lg:w-[60%] order-1 lg:order-2">
+                  <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-normal leading-tight text-center lg:text-right" style={{ fontFamily: 'K2D, sans-serif' }}>
                     <span className="text-black">CHOOSE YOUR PARTNER</span> <br />
                     <span style={{ color: '#CACA78' }}>OR</span>
                     <br />
@@ -88,27 +88,27 @@ export default function HeroSection({ onBrowseClick }: HeroSectionProps) {
         </div>
 
         {/* Services Section with Olive Background */}
-        <div className="mt-26 relative">
+        <div className="mt-16 sm:mt-20 lg:mt-26 relative">
           <div 
-            className="absolute inset-7 bg-[#CACA78] blur-lg transform scale-105"
-            style={{ borderRadius: '30px', height: '90%' }}
+            className="absolute inset-4 sm:inset-6 lg:inset-7 bg-[#CACA78] blur-lg transform scale-105"
+            style={{ borderRadius: '20px', height: '90%' }}
           ></div>
-          <div className="relative mx-auto px-4 sm:px-6 lg:px-8 py-16 ">
-            <div className="space-y-8 flex flex-col items-center">
+          <div className="relative mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
+            <div className="space-y-6 sm:space-y-8 flex flex-col items-center">
               <hr className="w-[90%] mx-auto border-black opacity-30 border-t-2" />
               
               {/* Service for Service */}
-              <div className="flex items-center justify-between w-[80%]">
-                <div className="flex items-start space-x-24">
-                  <span className="text-7xl font-black text-black -mt-4" style={{ fontFamily: 'Kanit, sans-serif' }}>1.</span>
+              <div className="flex flex-col lg:flex-row items-center justify-between w-full lg:w-[80%] gap-4 lg:gap-0">
+                <div className="flex flex-col sm:flex-row items-center lg:items-start space-y-4 sm:space-y-0 sm:space-x-8 lg:space-x-24 text-center lg:text-left">
+                  <span className="text-4xl sm:text-5xl lg:text-7xl font-black text-black" style={{ fontFamily: 'Kanit, sans-serif' }}>1.</span>
                   <div>
-                    <h3 className="text-4xl font-bold text-white" style={{ fontFamily: 'Kanit, sans-serif' }}>
+                    <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white" style={{ fontFamily: 'Kanit, sans-serif' }}>
                       SERVICE FOR SERVICE
                     </h3>
                   </div>
                 </div>
-                <div className="text-center">
-                  <p className="text-black text-lg" style={{ fontFamily: 'Lato, sans-serif' }}>
+                <div className="text-center lg:text-left lg:max-w-md">
+                  <p className="text-black text-sm sm:text-base lg:text-lg" style={{ fontFamily: 'Lato, sans-serif' }}>
                     Businesses exchange services—advertising for advertising, or other types of collaboration.
                   </p>
                 </div>
@@ -117,17 +117,17 @@ export default function HeroSection({ onBrowseClick }: HeroSectionProps) {
               <hr className="w-[90%] mx-auto border-black opacity-30 border-t-2" />
 
               {/* Service for Money */}
-              <div className="flex items-center justify-between w-[80%]">
-                <div className="flex items-start space-x-24">
-                  <span className="text-7xl font-black text-black -mt-4" style={{ fontFamily: 'Kanit, sans-serif' }}>2.</span>
+              <div className="flex flex-col lg:flex-row items-center justify-between w-full lg:w-[80%] gap-4 lg:gap-0">
+                <div className="flex flex-col sm:flex-row items-center lg:items-start space-y-4 sm:space-y-0 sm:space-x-8 lg:space-x-24 text-center lg:text-left">
+                  <span className="text-4xl sm:text-5xl lg:text-7xl font-black text-black" style={{ fontFamily: 'Kanit, sans-serif' }}>2.</span>
                   <div>
-                    <h3 className="text-4xl font-bold text-white" style={{ fontFamily: 'Kanit, sans-serif' }}>
+                    <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white" style={{ fontFamily: 'Kanit, sans-serif' }}>
                       SERVICE FOR MONEY
                     </h3>
                   </div>
                 </div>
-                <div className="text-center">
-                  <p className="text-black text-lg" style={{ fontFamily: 'Lato, sans-serif' }}>
+                <div className="text-center lg:text-left lg:max-w-md">
+                  <p className="text-black text-sm sm:text-base lg:text-lg" style={{ fontFamily: 'Lato, sans-serif' }}>
                     Offer your services to other businesses for a fee.
                   </p>
                 </div>
@@ -136,17 +136,17 @@ export default function HeroSection({ onBrowseClick }: HeroSectionProps) {
               <hr className="w-[90%] mx-auto border-black opacity-30 border-t-2" />
 
               {/* Money for Service */}
-              <div className="flex items-center justify-between w-[80%]">
-                <div className="flex items-start space-x-24">
-                  <span className="text-7xl font-black text-black -mt-4" style={{ fontFamily: 'Kanit, sans-serif' }}>3.</span>
+              <div className="flex flex-col lg:flex-row items-center justify-between w-full lg:w-[80%] gap-4 lg:gap-0">
+                <div className="flex flex-col sm:flex-row items-center lg:items-start space-y-4 sm:space-y-0 sm:space-x-8 lg:space-x-24 text-center lg:text-left">
+                  <span className="text-4xl sm:text-5xl lg:text-7xl font-black text-black" style={{ fontFamily: 'Kanit, sans-serif' }}>3.</span>
                   <div>
-                    <h3 className="text-4xl font-bold text-white" style={{ fontFamily: 'Kanit, sans-serif' }}>
+                    <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white" style={{ fontFamily: 'Kanit, sans-serif' }}>
                       MONEY FOR SERVICE
                     </h3>
                   </div>
                 </div>
-                <div className="text-center">
-                  <p className="text-black text-lg" style={{ fontFamily: 'Lato, sans-serif' }}>
+                <div className="text-center lg:text-left lg:max-w-md">
+                  <p className="text-black text-sm sm:text-base lg:text-lg" style={{ fontFamily: 'Lato, sans-serif' }}>
                     Pay other businesses for services and get effective promotion for your company.
                   </p>
                 </div>
@@ -158,50 +158,84 @@ export default function HeroSection({ onBrowseClick }: HeroSectionProps) {
         </div>
 
         {/* Bottom Call to Action */}
-        <div className="bg-white pt-26 pb-22">
-          <div className="max-w-[90%] mx-auto">
+        <div className="bg-white pt-12 sm:pt-16 lg:pt-26 pb-12 sm:pb-16 lg:pb-22">
+          <div className="max-w-[90%] mx-auto px-4">
             <div className="text-center">
-              <div className="flex justify-center items-center mb-10">
+              {/* Desktop/Tablet Layout (md and up) */}
+              <div className="hidden md:flex justify-center items-center mb-8 lg:mb-10">
                 <div className="text-center flex-1">
-                  <h3 className="text-3xl font-extrabold text-black mb-2" style={{ fontFamily: 'K2D, sans-serif' }}>
+                  <h3 className="text-2xl lg:text-3xl font-extrabold text-black mb-2" style={{ fontFamily: 'K2D, sans-serif' }}>
                     REGISTER AN
                     <br />
                     ACCOUNT
                   </h3>
                 </div>
                 
-                <div className="flex items-center px-8">
-                  <svg className="w-48 h-8" fill="none" stroke="#CACA78" viewBox="0 0 96 24">
+                <div className="flex items-center px-4 lg:px-8">
+                  <svg className="w-24 lg:w-48 h-6 lg:h-8" fill="none" stroke="#CACA78" viewBox="0 0 96 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12h86m-6-6l6 6-6 6" />
                   </svg>
                 </div>
                 
                 <div className="text-center flex-1">
-                  <h3 className="text-3xl font-extrabold text-black mb-2" style={{ fontFamily: 'K2D, sans-serif' }}>
+                  <h3 className="text-2xl lg:text-3xl font-extrabold text-black mb-2" style={{ fontFamily: 'K2D, sans-serif' }}>
                     ADD SOME INFORMATION
                     <br />
                     ABOUT YOUR BUSINESS
                   </h3>
                 </div>
                 
-                <div className="flex items-center px-8">
-                  <svg className="w-48 h-8" fill="none" stroke="#CACA78" viewBox="0 0 96 24">
+                <div className="flex items-center px-4 lg:px-8">
+                  <svg className="w-24 lg:w-48 h-6 lg:h-8" fill="none" stroke="#CACA78" viewBox="0 0 96 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12h86m-6-6l6 6-6 6" />
                   </svg>
                 </div>
                 
                 <div className="text-center flex-1">
-                  <h3 className="text-3xl font-extrabold text-black mb-2" style={{ fontFamily: 'K2D, sans-serif' }}>
+                  <h3 className="text-2xl lg:text-3xl font-extrabold text-black mb-2" style={{ fontFamily: 'K2D, sans-serif' }}>
                     FIND A PERFECT
                     <br />
                     COLLABORATOR!
                   </h3>
                 </div>
               </div>
+
+              {/* Mobile Layout (sm and below) */}
+              <div className="md:hidden space-y-6 mb-8">
+                <div className="text-center">
+                  <h3 className="text-xl font-extrabold text-black mb-2" style={{ fontFamily: 'K2D, sans-serif' }}>
+                    REGISTER AN ACCOUNT
+                  </h3>
+                </div>
+                
+                <div className="flex justify-center">
+                  <svg className="w-16 h-6" fill="none" stroke="#CACA78" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                  </svg>
+                </div>
+                
+                <div className="text-center">
+                  <h3 className="text-xl font-extrabold text-black mb-2" style={{ fontFamily: 'K2D, sans-serif' }}>
+                    ADD INFORMATION ABOUT YOUR BUSINESS
+                  </h3>
+                </div>
+                
+                <div className="flex justify-center">
+                  <svg className="w-16 h-6" fill="none" stroke="#CACA78" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                  </svg>
+                </div>
+                
+                <div className="text-center">
+                  <h3 className="text-xl font-extrabold text-black mb-2" style={{ fontFamily: 'K2D, sans-serif' }}>
+                    FIND A PERFECT COLLABORATOR!
+                  </h3>
+                </div>
+              </div>
               
               <button
                 onClick={handleGetStarted}
-                className="bg-black text-white px-13 py-4 rounded-full font-medium text-xl hover:bg-gray-800 transition-colors duration-200"
+                className="bg-black text-white px-8 sm:px-10 lg:px-13 py-3 sm:py-4 rounded-full font-medium text-lg sm:text-xl hover:bg-gray-800 transition-colors duration-200"
                 style={{ fontFamily: 'Lato, sans-serif' }}
               >
                 LET'S GO!
