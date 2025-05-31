@@ -6,7 +6,7 @@ import {
   ArrowLeft, MapPin, Star, Users, Calendar, Globe, Mail, Phone, Instagram, 
   Youtube, Heart, Share2, MessageCircle, ChevronLeft, ChevronRight, Clock,
   DollarSign, Award, CheckCircle, Eye, Bookmark, Flag, ExternalLink,
-  Camera, Play, Download, Filter, Search, ThumbsUp, ThumbsDown
+  Camera, Play, Download, Filter, Search, ThumbsUp, ThumbsDown, Lock
 } from 'lucide-react'
 import EmailModal from '@/components/EmailModal'
 
@@ -38,6 +38,7 @@ export default function BusinessDetailPage() {
   const router = useRouter()
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [showEmailModal, setShowEmailModal] = useState(false)
+  const [showLoginPrompt, setShowLoginPrompt] = useState(false)
   const [isLiked, setIsLiked] = useState(false)
   const [isBookmarked, setIsBookmarked] = useState(false)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
@@ -268,9 +269,32 @@ We're passionate about helping businesses grow and thrive in the digital age. Wh
     }
   ]
 
-  const handleEmailBusiness = () => setShowEmailModal(true)
-  const handleLike = () => setIsLiked(!isLiked)
-  const handleBookmark = () => setIsBookmarked(!isBookmarked)
+  const handleEmailBusiness = () => {
+    if (!isLoggedIn) {
+      setShowLoginPrompt(true)
+      setTimeout(() => setShowLoginPrompt(false), 3000)
+      return
+    }
+    setShowEmailModal(true)
+  }
+
+  const handleLike = () => {
+    if (!isLoggedIn) {
+      setShowLoginPrompt(true)
+      setTimeout(() => setShowLoginPrompt(false), 3000)
+      return
+    }
+    setIsLiked(!isLiked)
+  }
+
+  const handleBookmark = () => {
+    if (!isLoggedIn) {
+      setShowLoginPrompt(true)
+      setTimeout(() => setShowLoginPrompt(false), 3000)
+      return
+    }
+    setIsBookmarked(!isBookmarked)
+  }
 
   const getPlatformIcon = (platform: string) => {
     switch (platform.toLowerCase()) {
@@ -310,6 +334,16 @@ We're passionate about helping businesses grow and thrive in the digital age. Wh
 
   return (
     <div className="bg-gray-50 min-h-screen">
+      {/* Login Prompt */}
+      {showLoginPrompt && (
+        <div className="fixed top-4 right-4 bg-red-100 border border-red-300 text-red-700 px-4 py-3 rounded-lg text-sm z-50 shadow-lg">
+          <div className="flex items-center">
+            <Lock className="w-4 h-4 mr-2" />
+            Please login to interact with businesses
+          </div>
+        </div>
+      )}
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Back Button */}
         <button
@@ -363,7 +397,7 @@ We're passionate about helping businesses grow and thrive in the digital age. Wh
                   <button
                     onClick={handleBookmark}
                     className={`p-3 rounded-full backdrop-blur-sm transition-colors duration-200 ${
-                      isBookmarked ? 'bg-purple-500 text-white' : 'bg-white/90 text-gray-600 hover:bg-white'
+                      isBookmarked ? 'bg-[#9A9A4A] text-white' : 'bg-white/90 text-gray-600 hover:bg-white'
                     }`}
                   >
                     <Bookmark className={`w-5 h-5 ${isBookmarked ? 'fill-current' : ''}`} />
@@ -394,7 +428,7 @@ We're passionate about helping businesses grow and thrive in the digital age. Wh
                     key={index}
                     onClick={() => setCurrentImageIndex(index)}
                     className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-colors duration-200 ${
-                      index === currentImageIndex ? 'border-purple-500' : 'border-gray-200'
+                      index === currentImageIndex ? 'border-[#9A9A4A]' : 'border-gray-200'
                     }`}
                   >
                     <img
@@ -421,7 +455,7 @@ We're passionate about helping businesses grow and thrive in the digital age. Wh
                     )}
                   </div>
                   <p className="text-lg text-gray-600 mb-3">{business.tagline}</p>
-                  <span className="inline-block bg-purple-100 text-purple-800 text-sm px-3 py-1 rounded-full">
+                  <span className="inline-block bg-[#CACA78]/20 text-[#8A8A3A] text-sm px-3 py-1 rounded-full font-medium">
                     {business.category}
                   </span>
                 </div>
@@ -430,19 +464,19 @@ We're passionate about helping businesses grow and thrive in the digital age. Wh
               {/* Quick Stats */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                 <div className="text-center p-3 bg-gray-50 rounded-lg">
-                  <div className="text-2xl font-bold text-purple-600">{business.stats.projectsCompleted}+</div>
+                  <div className="text-2xl font-bold text-[#9A9A4A]">{business.stats.projectsCompleted}+</div>
                   <div className="text-sm text-gray-600">Projects Completed</div>
                 </div>
                 <div className="text-center p-3 bg-gray-50 rounded-lg">
-                  <div className="text-2xl font-bold text-purple-600">{business.stats.clientRetention}</div>
+                  <div className="text-2xl font-bold text-[#9A9A4A]">{business.stats.clientRetention}</div>
                   <div className="text-sm text-gray-600">Client Retention</div>
                 </div>
                 <div className="text-center p-3 bg-gray-50 rounded-lg">
-                  <div className="text-2xl font-bold text-purple-600">{business.stats.averageROI}</div>
+                  <div className="text-2xl font-bold text-[#9A9A4A]">{business.stats.averageROI}</div>
                   <div className="text-sm text-gray-600">Average ROI</div>
                 </div>
                 <div className="text-center p-3 bg-gray-50 rounded-lg">
-                  <div className="text-2xl font-bold text-purple-600">{business.stats.yearsExperience}</div>
+                  <div className="text-2xl font-bold text-[#9A9A4A]">{business.stats.yearsExperience}</div>
                   <div className="text-sm text-gray-600">Years Experience</div>
                 </div>
               </div>
@@ -487,7 +521,7 @@ We're passionate about helping businesses grow and thrive in the digital age. Wh
                       onClick={() => setActiveTab(tab.id as any)}
                       className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors duration-200 ${
                         activeTab === tab.id
-                          ? 'border-purple-500 text-purple-600'
+                          ? 'border-[#9A9A4A] text-[#8A8A3A]'
                           : 'border-transparent text-gray-500 hover:text-gray-700'
                       }`}
                     >
@@ -513,7 +547,7 @@ We're passionate about helping businesses grow and thrive in the digital age. Wh
                         )}
                         <button
                           onClick={() => setShowFullDescription(!showFullDescription)}
-                          className="text-purple-600 hover:text-purple-700 font-medium"
+                          className="text-[#9A9A4A] hover:text-[#8A8A3A] font-medium"
                         >
                           {showFullDescription ? 'Show less' : 'Read more'}
                         </button>
@@ -538,8 +572,8 @@ We're passionate about helping businesses grow and thrive in the digital age. Wh
                       <h3 className="text-xl font-semibold text-gray-900 mb-4">Collaboration Opportunities</h3>
                       <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                         {business.collaborationTypes.map((type, index) => (
-                          <div key={index} className="flex items-center p-3 bg-purple-50 rounded-lg">
-                            <div className="w-2 h-2 bg-purple-500 rounded-full mr-3"></div>
+                          <div key={index} className="flex items-center p-3 bg-[#CACA78]/10 rounded-lg">
+                            <div className="w-2 h-2 bg-[#9A9A4A] rounded-full mr-3"></div>
                             <span className="text-gray-700">{type}</span>
                           </div>
                         ))}
@@ -575,7 +609,7 @@ We're passionate about helping businesses grow and thrive in the digital age. Wh
                           />
                           <div className="p-6">
                             <div className="flex items-center justify-between mb-2">
-                              <span className="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full">
+                              <span className="bg-[#CACA78]/20 text-[#8A8A3A] text-xs px-2 py-1 rounded-full font-medium">
                                 {project.category}
                               </span>
                               <span className="text-sm text-gray-500">{project.completedDate}</span>
@@ -611,7 +645,7 @@ We're passionate about helping businesses grow and thrive in the digital age. Wh
                         <select
                           value={reviewFilter}
                           onChange={(e) => setReviewFilter(e.target.value as any)}
-                          className="text-sm border border-gray-300 rounded-lg px-3 py-1"
+                          className="text-sm border border-gray-300 rounded-lg px-3 py-1 focus:ring-2 focus:ring-[#CACA78] focus:border-transparent"
                         >
                           <option value="all">All Reviews</option>
                           <option value="5">5 Stars</option>
@@ -729,9 +763,17 @@ We're passionate about helping businesses grow and thrive in the digital age. Wh
                           <h4 className="font-semibold text-gray-900 mb-2">{service.name}</h4>
                           <p className="text-gray-600 text-sm mb-4">{service.description}</p>
                           <div className="flex items-center justify-between">
-                            <span className="text-lg font-bold text-purple-600">{service.price}</span>
-                            <button className="bg-purple-100 text-purple-700 px-4 py-2 rounded-lg hover:bg-purple-200 transition-colors duration-200 text-sm font-medium">
-                              Get Quote
+                            <span className="text-lg font-bold text-[#9A9A4A]">{service.price}</span>
+                            <button
+                              onClick={handleEmailBusiness}
+                              className={`px-4 py-2 rounded-lg transition-colors duration-200 text-sm font-medium ${
+                                isLoggedIn 
+                                  ? 'bg-[#CACA78]/20 text-[#8A8A3A] hover:bg-[#CACA78]/30' 
+                                  : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                              }`}
+                              disabled={!isLoggedIn}
+                            >
+                              {isLoggedIn ? 'Get Quote' : 'Login Required'}
                             </button>
                           </div>
                         </div>
@@ -739,16 +781,22 @@ We're passionate about helping businesses grow and thrive in the digital age. Wh
                     </div>
 
                     {/* Custom Quote CTA */}
-                    <div className="bg-gradient-to-r from-purple-100 to-pink-100 rounded-lg p-6 text-center">
+                    <div className="bg-gradient-to-r from-[#CACA78]/20 to-[#9A9A4A]/20 rounded-lg p-6 text-center">
                       <h4 className="text-xl font-semibold text-gray-900 mb-2">Need a Custom Solution?</h4>
                       <p className="text-gray-600 mb-4">
                         We offer tailored packages to meet your specific needs. Contact us for a personalized quote.
                       </p>
                       <button
                         onClick={handleEmailBusiness}
-                        className="bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 transition-colors duration-200 font-medium"
+                        className={`px-6 py-3 rounded-lg transition-colors duration-200 font-medium flex items-center mx-auto ${
+                          isLoggedIn 
+                            ? 'bg-[#9A9A4A] text-white hover:bg-[#8A8A3A]' 
+                            : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                        }`}
+                        disabled={!isLoggedIn}
                       >
-                        Request Custom Quote
+                        {!isLoggedIn && <Lock className="w-4 h-4 mr-2" />}
+                        {isLoggedIn ? 'Request Custom Quote' : 'Login to Request Quote'}
                       </button>
                     </div>
                   </div>
@@ -767,7 +815,7 @@ We're passionate about helping businesses grow and thrive in the digital age. Wh
                 <div className="space-y-4">
                   <div className="flex items-center">
                     <Globe className="w-5 h-5 text-gray-400 mr-3" />
-                    <a href={business.website} target="_blank" rel="noopener noreferrer" className="text-purple-600 hover:text-purple-700 flex items-center">
+                    <a href={business.website} target="_blank" rel="noopener noreferrer" className="text-[#9A9A4A] hover:text-[#8A8A3A] flex items-center">
                       {business.website}
                       <ExternalLink className="w-4 h-4 ml-1" />
                     </a>
@@ -800,7 +848,7 @@ We're passionate about helping businesses grow and thrive in the digital age. Wh
                         href={business.socialLinks[platform.toLowerCase() as keyof typeof business.socialLinks]}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="p-3 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors duration-200"
+                        className="p-3 bg-gray-100 rounded-lg hover:bg-[#CACA78]/20 transition-colors duration-200"
                         title={platform}
                       >
                         {getPlatformIcon(platform)}
@@ -812,10 +860,16 @@ We're passionate about helping businesses grow and thrive in the digital age. Wh
                 {/* Contact Button */}
                 <button
                   onClick={handleEmailBusiness}
-                  className="w-full mt-6 bg-purple-600 text-white py-3 px-4 rounded-lg hover:bg-purple-700 transition-colors duration-200 flex items-center justify-center font-medium"
+                  className={`w-full mt-6 py-3 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center font-medium ${
+                    isLoggedIn
+                      ? 'bg-[#9A9A4A] text-white hover:bg-[#8A8A3A]'
+                      : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                  }`}
+                  disabled={!isLoggedIn}
                 >
+                  {!isLoggedIn && <Lock className="w-5 h-5 mr-2" />}
                   <MessageCircle className="w-5 h-5 mr-2" />
-                  Contact for Partnership
+                  {isLoggedIn ? 'Contact for Partnership' : 'Login to Contact'}
                 </button>
               </div>
 
