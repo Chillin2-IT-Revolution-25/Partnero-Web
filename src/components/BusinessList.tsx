@@ -1,9 +1,7 @@
-// File path: src/components/BusinessList.tsx
-
 'use client'
 
 import { useState } from 'react'
-import { Search, Filter, Grid, List, MapPin, Star, Users, Instagram, Youtube, MessageCircle, Lock } from 'lucide-react'
+import { Search, Filter, Grid, List, Star, Users } from 'lucide-react'
 import BusinessCard from './BusinessCard'
 import FilterSidebar from './FilterSidebar'
 
@@ -23,9 +21,11 @@ interface Business {
 
 interface BusinessListProps {
   isLoggedIn: boolean
+  onBusinessClick: (businessId: string) => void
+  onEmailBusiness: (businessId: string) => void
 }
 
-export default function BusinessList({ isLoggedIn }: BusinessListProps) {
+export default function BusinessList({ isLoggedIn, onBusinessClick, onEmailBusiness }: BusinessListProps) {
   const [searchTerm, setSearchTerm] = useState('')
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
   const [isFilterOpen, setIsFilterOpen] = useState(false)
@@ -102,6 +102,19 @@ export default function BusinessList({ isLoggedIn }: BusinessListProps) {
       image: '/api/placeholder/300/200',
       isTopRated: false,
       isRecent: true
+    },
+    {
+      id: '6',
+      name: 'EcoTech Innovations',
+      description: 'Sustainable technology company seeking environmentally conscious creators and tech reviewers.',
+      category: 'Technology',
+      location: 'Portland, OR',
+      rating: 4.7,
+      followers: '20K',
+      platforms: ['YouTube', 'LinkedIn', 'Instagram'],
+      image: '/api/placeholder/300/200',
+      isTopRated: false,
+      isRecent: false
     }
   ]
 
@@ -130,12 +143,12 @@ export default function BusinessList({ isLoggedIn }: BusinessListProps) {
   const recentBusinesses = businesses.filter(b => b.isRecent).slice(0, 5)
 
   return (
-    <section id="businesses" className="py-16 bg-white">
+    <section className="py-16 bg-white min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Discover Collaboration Opportunities
+            Discover Partnership Opportunities
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
             Browse through hundreds of businesses and creators looking for partnerships
@@ -145,10 +158,10 @@ export default function BusinessList({ isLoggedIn }: BusinessListProps) {
         {/* Top Widgets */}
         <div className="grid md:grid-cols-2 gap-6 mb-8">
           {/* Top Rated Widget */}
-          <div className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg p-6">
+          <div className="bg-gradient-to-r from-purple-50 to-purple-100 rounded-lg p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
               <Star className="w-5 h-5 text-yellow-500 mr-2" />
-              Top Rated Businesses
+              Top Rated Partners
             </h3>
             <div className="space-y-3">
               {topRatedBusinesses.map(business => (
@@ -189,7 +202,7 @@ export default function BusinessList({ isLoggedIn }: BusinessListProps) {
               placeholder="Search businesses, categories, or locations..."
               value={searchTerm}
               onChange={(e) => handleSearch(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
             />
           </div>
           
@@ -198,13 +211,13 @@ export default function BusinessList({ isLoggedIn }: BusinessListProps) {
             <div className="flex items-center border border-gray-300 rounded-lg p-1">
               <button
                 onClick={() => setViewMode('grid')}
-                className={`p-2 rounded ${viewMode === 'grid' ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-gray-100'}`}
+                className={`p-2 rounded ${viewMode === 'grid' ? 'bg-purple-600 text-white' : 'text-gray-600 hover:bg-gray-100'}`}
               >
                 <Grid className="w-4 h-4" />
               </button>
               <button
                 onClick={() => setViewMode('list')}
-                className={`p-2 rounded ${viewMode === 'list' ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-gray-100'}`}
+                className={`p-2 rounded ${viewMode === 'list' ? 'bg-purple-600 text-white' : 'text-gray-600 hover:bg-gray-100'}`}
               >
                 <List className="w-4 h-4" />
               </button>
@@ -239,6 +252,8 @@ export default function BusinessList({ isLoggedIn }: BusinessListProps) {
               business={business}
               viewMode={viewMode}
               isLoggedIn={isLoggedIn}
+              onBusinessClick={onBusinessClick}
+              onEmailBusiness={onEmailBusiness}
             />
           ))}
         </div>

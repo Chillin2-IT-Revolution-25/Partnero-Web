@@ -1,9 +1,9 @@
-// File path: src/components/Navbar.tsx
-
 'use client'
 
 import { useState } from 'react'
-import { Menu, X, User, Settings, LogOut, ChevronDown } from 'lucide-react'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { Menu, X, Settings, LogOut, ChevronDown } from 'lucide-react'
 
 interface User {
   name: string
@@ -23,41 +23,54 @@ interface NavbarProps {
   onLogin: () => void
   onProfileClick: () => void
   onLogout: () => void
+  onBrowseClick?: () => void
 }
 
-export default function Navbar({ isLoggedIn, user, onLogin, onProfileClick, onLogout }: NavbarProps) {
+export default function Navbar({ isLoggedIn, user, onLogin, onProfileClick, onLogout, onBrowseClick }: NavbarProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false)
+  const pathname = usePathname()
 
   const navLinks = [
-    { name: 'Home', href: '#' },
-    { name: 'Browse', href: '#businesses' },
-    { name: 'About', href: '#about' },
-    { name: 'Contact', href: '#contact' }
+    { name: 'Home', href: '/' },
+    { name: 'Browse', href: '/browse' },
+    { name: 'About', href: '/about' },
+    { name: 'Contact', href: '/contact' }
   ]
+
+  const isActive = (href: string) => {
+    if (href === '/') {
+      return pathname === '/'
+    }
+    return pathname.startsWith(href)
+  }
 
   return (
     <nav className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo and Title */}
-          <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">CC</span>
+          <Link href="/" className="flex items-center space-x-3">
+            <div className="w-8 h-8 bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold text-sm">P</span>
             </div>
-            <h1 className="text-xl font-bold text-gray-900 hidden sm:block">CollabConnect</h1>
-          </div>
+            <h1 className="text-xl font-bold text-gray-900 hidden sm:block">Partnero</h1>
+          </Link>
 
           {/* Desktop Navigation Links */}
           <div className="hidden md:flex items-center space-x-8">
             {navLinks.map((link) => (
-              <a
+              <Link
                 key={link.name}
                 href={link.href}
-                className="text-gray-600 hover:text-gray-900 transition-colors duration-200 font-medium"
+                className={`transition-colors duration-200 font-medium ${
+                  isActive(link.href)
+                    ? 'text-purple-600 border-b-2 border-purple-600 pb-1'
+                    : 'text-gray-600 hover:text-gray-900'
+                }`}
               >
                 {link.name}
-              </a>
+              </Link>
             ))}
           </div>
 
@@ -73,7 +86,7 @@ export default function Navbar({ isLoggedIn, user, onLogin, onProfileClick, onLo
                 </button>
                 <button
                   onClick={onLogin}
-                  className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200 font-medium"
+                  className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors duration-200 font-medium"
                 >
                   Sign Up
                 </button>
@@ -143,14 +156,16 @@ export default function Navbar({ isLoggedIn, user, onLogin, onProfileClick, onLo
           <div className="md:hidden py-4 border-t border-gray-200">
             <div className="flex flex-col space-y-3">
               {navLinks.map((link) => (
-                <a
+                <Link
                   key={link.name}
                   href={link.href}
-                  className="text-gray-600 hover:text-gray-900 py-2 font-medium transition-colors duration-200"
+                  className={`py-2 font-medium transition-colors duration-200 ${
+                    isActive(link.href) ? 'text-purple-600' : 'text-gray-600 hover:text-gray-900'
+                  }`}
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {link.name}
-                </a>
+                </Link>
               ))}
             </div>
           </div>

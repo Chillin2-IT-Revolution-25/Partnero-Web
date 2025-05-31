@@ -1,9 +1,7 @@
-// File path: src/components/BusinessCard.tsx
-
 'use client'
 
 import { useState } from 'react'
-import { MapPin, Star, Users, MessageCircle, Lock, Instagram, Youtube, Heart, Share2 } from 'lucide-react'
+import { MapPin, Star, Users, MessageCircle, Lock, Instagram, Youtube, Heart, Share2, Mail } from 'lucide-react'
 
 interface Business {
   id: string
@@ -23,24 +21,27 @@ interface BusinessCardProps {
   business: Business
   viewMode: 'grid' | 'list'
   isLoggedIn: boolean
+  onBusinessClick: (businessId: string) => void
+  onEmailBusiness: (businessId: string) => void
 }
 
-export default function BusinessCard({ business, viewMode, isLoggedIn }: BusinessCardProps) {
+export default function BusinessCard({ business, viewMode, isLoggedIn, onBusinessClick, onEmailBusiness }: BusinessCardProps) {
   const [showFullDescription, setShowFullDescription] = useState(false)
   const [isLiked, setIsLiked] = useState(false)
   const [showLoginPrompt, setShowLoginPrompt] = useState(false)
 
-  const handleMessage = () => {
+  const handleMessage = (e: React.MouseEvent) => {
+    e.stopPropagation()
     if (!isLoggedIn) {
       setShowLoginPrompt(true)
       setTimeout(() => setShowLoginPrompt(false), 3000)
       return
     }
-    // Handle message functionality for logged-in users
-    console.log(`Messaging ${business.name}`)
+    onEmailBusiness(business.id)
   }
 
-  const handleReadMore = () => {
+  const handleReadMore = (e: React.MouseEvent) => {
+    e.stopPropagation()
     if (!isLoggedIn) {
       setShowLoginPrompt(true)
       setTimeout(() => setShowLoginPrompt(false), 3000)
@@ -49,13 +50,18 @@ export default function BusinessCard({ business, viewMode, isLoggedIn }: Busines
     setShowFullDescription(!showFullDescription)
   }
 
-  const handleLike = () => {
+  const handleLike = (e: React.MouseEvent) => {
+    e.stopPropagation()
     if (!isLoggedIn) {
       setShowLoginPrompt(true)
       setTimeout(() => setShowLoginPrompt(false), 3000)
       return
     }
     setIsLiked(!isLiked)
+  }
+
+  const handleCardClick = () => {
+    onBusinessClick(business.id)
   }
 
   const getPlatformIcon = (platform: string) => {
@@ -83,7 +89,10 @@ export default function BusinessCard({ business, viewMode, isLoggedIn }: Busines
 
   if (viewMode === 'list') {
     return (
-      <div className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow duration-300 relative">
+      <div 
+        className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow duration-300 relative cursor-pointer"
+        onClick={handleCardClick}
+      >
         {showLoginPrompt && (
           <div className="absolute top-4 right-4 bg-red-100 border border-red-300 text-red-700 px-3 py-2 rounded-lg text-sm z-10">
             Please login to interact
@@ -115,7 +124,7 @@ export default function BusinessCard({ business, viewMode, isLoggedIn }: Busines
             <div className="flex items-start justify-between mb-2">
               <div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-1">{business.name}</h3>
-                <span className="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">
+                <span className="inline-block bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full">
                   {business.category}
                 </span>
               </div>
@@ -137,7 +146,7 @@ export default function BusinessCard({ business, viewMode, isLoggedIn }: Busines
               {business.description.length > 120 && (
                 <button
                   onClick={handleReadMore}
-                  className="text-blue-600 hover:text-blue-700 ml-1 font-medium inline-flex items-center"
+                  className="text-purple-600 hover:text-purple-700 ml-1 font-medium inline-flex items-center"
                 >
                   {showFullDescription ? 'Show less' : 'Read more'}
                   {!isLoggedIn && <Lock className="w-3 h-3 ml-1" />}
@@ -177,11 +186,11 @@ export default function BusinessCard({ business, viewMode, isLoggedIn }: Busines
                 {/* Message Button */}
                 <button
                   onClick={handleMessage}
-                  className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200 flex items-center text-sm font-medium"
+                  className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors duration-200 flex items-center text-sm font-medium"
                 >
                   {!isLoggedIn && <Lock className="w-4 h-4 mr-1" />}
-                  <MessageCircle className="w-4 h-4 mr-1" />
-                  Message
+                  <Mail className="w-4 h-4 mr-1" />
+                  Contact
                 </button>
               </div>
             </div>
@@ -193,7 +202,10 @@ export default function BusinessCard({ business, viewMode, isLoggedIn }: Busines
 
   // Grid view
   return (
-    <div className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300 relative">
+    <div 
+      className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300 relative cursor-pointer flex flex-col h-full"
+      onClick={handleCardClick}
+    >
       {showLoginPrompt && (
         <div className="absolute top-4 right-4 bg-red-100 border border-red-300 text-red-700 px-3 py-2 rounded-lg text-sm z-10">
           Please login to interact
@@ -201,11 +213,11 @@ export default function BusinessCard({ business, viewMode, isLoggedIn }: Busines
       )}
       
       {/* Image */}
-      <div className="relative">
+      <div className="relative h-48 flex-shrink-0">
         <img
           src={business.image}
           alt={business.name}
-          className="w-full h-48 object-cover"
+          className="w-full h-full object-cover"
         />
         {business.isTopRated && (
           <div className="absolute top-3 left-3 bg-yellow-500 text-white px-3 py-1 rounded-full text-xs font-bold">
@@ -237,20 +249,20 @@ export default function BusinessCard({ business, viewMode, isLoggedIn }: Busines
       </div>
 
       {/* Content */}
-      <div className="p-6">
+      <div className="p-6 flex flex-col flex-grow">
         <div className="flex items-start justify-between mb-3">
           <h3 className="text-lg font-semibold text-gray-900">{business.name}</h3>
-          <span className="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">
+          <span className="inline-block bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full">
             {business.category}
           </span>
         </div>
 
-        <p className="text-gray-600 text-sm mb-4">
+        <p className="text-gray-600 text-sm mb-4 flex-grow">
           {showFullDescription ? business.description : truncatedDescription}
           {business.description.length > 120 && (
             <button
               onClick={handleReadMore}
-              className="text-blue-600 hover:text-blue-700 ml-1 font-medium inline-flex items-center"
+              className="text-purple-600 hover:text-purple-700 ml-1 font-medium inline-flex items-center"
             >
               {showFullDescription ? 'Show less' : 'Read more'}
               {!isLoggedIn && <Lock className="w-3 h-3 ml-1" />}
@@ -291,11 +303,11 @@ export default function BusinessCard({ business, viewMode, isLoggedIn }: Busines
         {/* Message Button */}
         <button
           onClick={handleMessage}
-          className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors duration-200 flex items-center justify-center font-medium"
+          className="w-full bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition-colors duration-200 flex items-center justify-center font-medium mt-auto"
         >
           {!isLoggedIn && <Lock className="w-4 h-4 mr-2" />}
-          <MessageCircle className="w-4 h-4 mr-2" />
-          {isLoggedIn ? 'Send Message' : 'Login to Message'}
+          <Mail className="w-4 h-4 mr-2" />
+          {isLoggedIn ? 'Send Message' : 'Login to Contact'}
         </button>
       </div>
     </div>

@@ -1,5 +1,3 @@
-// File path: src/components/FilterSidebar.tsx
-
 'use client'
 
 import { useState, useEffect } from 'react'
@@ -100,13 +98,13 @@ export default function FilterSidebar({ isOpen, onClose, filters, onFilterChange
       {/* Backdrop */}
       {isOpen && (
         <div 
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity duration-300"
+          className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 transition-opacity duration-300"
           onClick={onClose}
         />
       )}
 
       {/* Sidebar */}
-      <div className={`fixed top-0 right-0 h-full w-80 bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-in-out ${
+      <div className={`fixed top-0 right-0 h-full w-96 bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-in-out ${
         isOpen ? 'translate-x-0' : 'translate-x-full'
       }`}>
         {/* Header */}
@@ -131,7 +129,7 @@ export default function FilterSidebar({ isOpen, onClose, filters, onFilterChange
             <select
               value={localFilters.category}
               onChange={(e) => handleFilterChange('category', e.target.value === 'All Categories' ? '' : e.target.value)}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
             >
               {categories.map(category => (
                 <option key={category} value={category}>
@@ -150,7 +148,7 @@ export default function FilterSidebar({ isOpen, onClose, filters, onFilterChange
             <select
               value={localFilters.location}
               onChange={(e) => handleFilterChange('location', e.target.value === 'All Locations' ? '' : e.target.value)}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
             >
               {locations.map(location => (
                 <option key={location} value={location}>
@@ -179,7 +177,7 @@ export default function FilterSidebar({ isOpen, onClose, filters, onFilterChange
                   />
                   <div className={`flex items-center w-full p-3 border rounded-lg transition-colors duration-200 ${
                     localFilters.platform === platform.value 
-                      ? 'border-blue-500 bg-blue-50' 
+                      ? 'border-purple-500 bg-purple-50' 
                       : 'border-gray-300 hover:bg-gray-50'
                   }`}>
                     {platform.icon && <div className="mr-3">{platform.icon}</div>}
@@ -209,7 +207,7 @@ export default function FilterSidebar({ isOpen, onClose, filters, onFilterChange
                   />
                   <div className={`flex items-center w-full p-3 border rounded-lg transition-colors duration-200 ${
                     localFilters.rating === rating 
-                      ? 'border-blue-500 bg-blue-50' 
+                      ? 'border-purple-500 bg-purple-50' 
                       : 'border-gray-300 hover:bg-gray-50'
                   }`}>
                     <div className="flex items-center mr-3">
@@ -243,7 +241,7 @@ export default function FilterSidebar({ isOpen, onClose, filters, onFilterChange
                 <label key={type} className="flex items-center">
                   <input
                     type="checkbox"
-                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-500 mr-3"
+                    className="rounded border-gray-300 text-purple-600 focus:ring-purple-500 mr-3"
                   />
                   <span className="text-sm text-gray-700">{type}</span>
                 </label>
@@ -263,7 +261,7 @@ export default function FilterSidebar({ isOpen, onClose, filters, onFilterChange
             </button>
             <button
               onClick={handleApplyFilters}
-              className="flex-1 px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 font-medium"
+              className="flex-1 px-4 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors duration-200 font-medium"
             >
               Apply Filters
             </button>

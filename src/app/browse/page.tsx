@@ -3,13 +3,17 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Navbar from '@/components/Navbar'
-import HeroSection from '@/components/HeroSection'
+import BusinessList from '@/components/BusinessList'
 import ProfileModal from '@/components/ProfileModal'
+import EmailModal from '@/components/EmailModal'
 
-export default function HomePage() {
+export default function BrowsePage() {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [showProfileModal, setShowProfileModal] = useState(false)
+  const [showEmailModal, setShowEmailModal] = useState(false)
+  const [selectedBusinessId, setSelectedBusinessId] = useState<string | null>(null)
   const router = useRouter()
+  
   const [user, setUser] = useState({
     name: 'John Doe',
     email: 'john@example.com',
@@ -35,8 +39,13 @@ export default function HomePage() {
     setShowProfileModal(true)
   }
 
-  const handleBrowseClick = () => {
-    router.push('/browse')
+  const handleBusinessClick = (businessId: string) => {
+    router.push(`/business/${businessId}`)
+  }
+
+  const handleEmailBusiness = (businessId: string) => {
+    setSelectedBusinessId(businessId)
+    setShowEmailModal(true)
   }
 
   return (
@@ -47,16 +56,30 @@ export default function HomePage() {
         onLogin={handleLogin}
         onProfileClick={handleProfileClick}
         onLogout={handleLogout}
-        onBrowseClick={handleBrowseClick}
       />
       
-      <HeroSection onBrowseClick={handleBrowseClick} />
+      <BusinessList 
+        isLoggedIn={isLoggedIn}
+        onBusinessClick={handleBusinessClick}
+        onEmailBusiness={handleEmailBusiness}
+      />
       
       {showProfileModal && (
         <ProfileModal 
           user={user}
           onClose={() => setShowProfileModal(false)}
           onLogout={handleLogout}
+        />
+      )}
+
+      {showEmailModal && selectedBusinessId && (
+        <EmailModal 
+          businessId={selectedBusinessId}
+          onClose={() => {
+            setShowEmailModal(false)
+            setSelectedBusinessId(null)
+          }}
+          isLoggedIn={isLoggedIn}
         />
       )}
     </div>
