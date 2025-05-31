@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Eye, EyeOff, Mail, Lock, User, Building, ArrowRight, AlertCircle, Check } from 'lucide-react'
+import Logo from '../../../assets/logo/Logo.svg'
 
 export default function SignUpPage() {
   const router = useRouter()
@@ -179,45 +180,58 @@ export default function SignUpPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-purple-50 flex items-center justify-center p-4">
-      {/* Background decoration */}
+    <div className="min-h-screen bg-gradient-to-br from-[#CACA78]/10 via-[#CACA78]/5 to-[#9A9A4A]/15 flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Add Google Fonts */}
+      <style jsx global>{`
+        @import url('https://fonts.googleapis.com/css2?family=K2D:wght@400;700;800&family=Lato:wght@400;700&display=swap');
+      `}</style>
+      
+      {/* Background decoration with enhanced olive colors */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-100 rounded-full mix-blend-multiply filter blur-xl opacity-70"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-pink-100 rounded-full mix-blend-multiply filter blur-xl opacity-70"></div>
+        <div className="absolute -top-80 -left-80 w-160 h-160 bg-[#CACA78]/50 rounded-full filter blur-3xl opacity-80"></div>
+        <div className="absolute -bottom-80 -right-80 w-160 h-160 bg-[#9A9A4A]/45 rounded-full filter blur-3xl opacity-80"></div>
       </div>
 
       <div className="relative w-full max-w-lg">
         {/* Logo */}
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center space-x-3">
-            <div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl flex items-center justify-center">
-              <span className="text-white font-bold text-lg">P</span>
-            </div>
-            <span className="text-2xl font-bold text-gray-900">Partnero</span>
+            <img 
+              src={Logo.src}
+              alt="Partnero Logo"
+              className="w-12 h-12 rounded-xl object-cover" 
+            />
+            <span className="text-3xl font-bold text-gray-900" style={{ fontFamily: 'K2D, sans-serif' }}>Partnero</span>
           </Link>
           <p className="text-gray-600 mt-2">Join the partnership revolution</p>
         </div>
 
         {/* Progress Steps */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between">
+        <div className="mb-8 relative">
+          <div className="flex items-center justify-between relative z-10">
             {[1, 2, 3].map((step) => (
               <div key={step} className="flex items-center">
-                <div className={`w-10 h-10 rounded-full flex items-center justify-center font-medium ${
+                <div className={`w-10 h-10 rounded-full flex items-center justify-center font-medium relative z-10 ${
                   currentStep >= step 
-                    ? 'bg-purple-600 text-white' 
+                    ? 'bg-[#9A9A4A] text-white' 
                     : 'bg-gray-200 text-gray-600'
                 }`}>
                   {currentStep > step ? <Check className="w-5 h-5" /> : step}
                 </div>
-                {step < 3 && (
-                  <div className={`flex-1 h-1 mx-2 ${
-                    currentStep > step ? 'bg-purple-600' : 'bg-gray-200'
-                  }`} />
-                )}
               </div>
             ))}
           </div>
+          
+          {/* Connecting line */}
+          <div className="absolute top-5 left-5 right-5 h-0.5 bg-gray-200 -z-10">
+            <div 
+              className="h-full bg-[#9A9A4A] transition-all duration-300 ease-in-out"
+              style={{ 
+                width: currentStep === 1 ? '0%' : currentStep === 2 ? '50%' : '100%' 
+              }}
+            />
+          </div>
+          
           <div className="flex justify-between mt-2 text-sm text-gray-600">
             <span>Personal Info</span>
             <span>Business Details</span>
@@ -260,12 +274,12 @@ export default function SignUpPage() {
                       First Name
                     </label>
                     <div className="relative">
-                      <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                      <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#9A9A4A] w-5 h-5" />
                       <input
                         type="text"
                         value={formData.firstName}
                         onChange={(e) => handleInputChange('firstName', e.target.value)}
-                        className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent ${
+                        className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#CACA78] focus:border-transparent ${
                           errors.firstName ? 'border-red-500' : 'border-gray-300'
                         }`}
                         placeholder="John"
@@ -282,7 +296,7 @@ export default function SignUpPage() {
                       type="text"
                       value={formData.lastName}
                       onChange={(e) => handleInputChange('lastName', e.target.value)}
-                      className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent ${
+                      className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#CACA78] focus:border-transparent ${
                         errors.lastName ? 'border-red-500' : 'border-gray-300'
                       }`}
                       placeholder="Doe"
@@ -296,12 +310,12 @@ export default function SignUpPage() {
                     Email Address
                   </label>
                   <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#9A9A4A] w-5 h-5" />
                     <input
                       type="email"
                       value={formData.email}
                       onChange={(e) => handleInputChange('email', e.target.value)}
-                      className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent ${
+                      className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#CACA78] focus:border-transparent ${
                         errors.email ? 'border-red-500' : 'border-gray-300'
                       }`}
                       placeholder="your.email@example.com"
@@ -315,12 +329,12 @@ export default function SignUpPage() {
                     Password
                   </label>
                   <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#9A9A4A] w-5 h-5" />
                     <input
                       type={showPassword ? 'text' : 'password'}
                       value={formData.password}
                       onChange={(e) => handleInputChange('password', e.target.value)}
-                      className={`w-full pl-10 pr-12 py-3 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent ${
+                      className={`w-full pl-10 pr-12 py-3 border rounded-lg focus:ring-2 focus:ring-[#CACA78] focus:border-transparent ${
                         errors.password ? 'border-red-500' : 'border-gray-300'
                       }`}
                       placeholder="Create a strong password"
@@ -341,12 +355,12 @@ export default function SignUpPage() {
                     Confirm Password
                   </label>
                   <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#9A9A4A] w-5 h-5" />
                     <input
                       type={showConfirmPassword ? 'text' : 'password'}
                       value={formData.confirmPassword}
                       onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
-                      className={`w-full pl-10 pr-12 py-3 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent ${
+                      className={`w-full pl-10 pr-12 py-3 border rounded-lg focus:ring-2 focus:ring-[#CACA78] focus:border-transparent ${
                         errors.confirmPassword ? 'border-red-500' : 'border-gray-300'
                       }`}
                       placeholder="Confirm your password"
@@ -377,12 +391,12 @@ export default function SignUpPage() {
                       onClick={() => handleInputChange('businessType', 'creator')}
                       className={`p-4 border rounded-lg text-left transition-colors duration-200 ${
                         formData.businessType === 'creator'
-                          ? 'border-purple-500 bg-purple-50'
+                          ? 'border-[#9A9A4A] bg-[#CACA78]/10'
                           : 'border-gray-300 hover:bg-gray-50'
                       }`}
                     >
                       <div className="flex items-center">
-                        <User className="w-5 h-5 text-purple-600 mr-2" />
+                        <User className="w-5 h-5 text-[#9A9A4A] mr-2" />
                         <span className="font-medium">Content Creator</span>
                       </div>
                       <p className="text-sm text-gray-600 mt-1">
@@ -394,12 +408,12 @@ export default function SignUpPage() {
                       onClick={() => handleInputChange('businessType', 'business')}
                       className={`p-4 border rounded-lg text-left transition-colors duration-200 ${
                         formData.businessType === 'business'
-                          ? 'border-purple-500 bg-purple-50'
+                          ? 'border-[#9A9A4A] bg-[#CACA78]/10'
                           : 'border-gray-300 hover:bg-gray-50'
                       }`}
                     >
                       <div className="flex items-center">
-                        <Building className="w-5 h-5 text-purple-600 mr-2" />
+                        <Building className="w-5 h-5 text-[#9A9A4A] mr-2" />
                         <span className="font-medium">Business</span>
                       </div>
                       <p className="text-sm text-gray-600 mt-1">
@@ -414,12 +428,12 @@ export default function SignUpPage() {
                     {formData.businessType === 'creator' ? 'Creator Name' : 'Business Name'}
                   </label>
                   <div className="relative">
-                    <Building className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                    <Building className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#9A9A4A] w-5 h-5" />
                     <input
                       type="text"
                       value={formData.businessName}
                       onChange={(e) => handleInputChange('businessName', e.target.value)}
-                      className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent ${
+                      className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#CACA78] focus:border-transparent ${
                         errors.businessName ? 'border-red-500' : 'border-gray-300'
                       }`}
                       placeholder={formData.businessType === 'creator' ? 'Your creator name or brand' : 'Your business name'}
@@ -435,7 +449,7 @@ export default function SignUpPage() {
                   <select
                     value={formData.category}
                     onChange={(e) => handleInputChange('category', e.target.value)}
-                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent ${
+                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#CACA78] focus:border-transparent ${
                       errors.category ? 'border-red-500' : 'border-gray-300'
                     }`}
                   >
@@ -455,7 +469,7 @@ export default function SignUpPage() {
                     value={formData.description}
                     onChange={(e) => handleInputChange('description', e.target.value)}
                     rows={4}
-                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none ${
+                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#CACA78] focus:border-transparent resize-none ${
                       errors.description ? 'border-red-500' : 'border-gray-300'
                     }`}
                     placeholder="Tell us about yourself and what you do. What kind of partnerships are you looking for?"
@@ -503,13 +517,13 @@ export default function SignUpPage() {
                       type="checkbox"
                       checked={formData.agreeToTerms}
                       onChange={(e) => handleInputChange('agreeToTerms', e.target.checked)}
-                      className="rounded border-gray-300 text-purple-600 focus:ring-purple-500 mt-1 mr-3"
+                      className="rounded border-gray-300 text-[#9A9A4A] focus:ring-[#CACA78] mt-1 mr-3"
                     />
                     <span className="text-sm text-gray-700">
                       I agree to the{' '}
-                      <Link href="/terms" className="text-purple-600 hover:text-purple-700">Terms of Service</Link>
+                      <Link href="/terms" className="text-[#9A9A4A] hover:text-[#8A8A3A]">Terms of Service</Link>
                       {' '}and{' '}
-                      <Link href="/privacy" className="text-purple-600 hover:text-purple-700">Privacy Policy</Link>
+                      <Link href="/privacy" className="text-[#9A9A4A] hover:text-[#8A8A3A]">Privacy Policy</Link>
                     </span>
                   </label>
                   {errors.agreeToTerms && <p className="text-red-500 text-xs">{errors.agreeToTerms}</p>}
@@ -519,7 +533,7 @@ export default function SignUpPage() {
                       type="checkbox"
                       checked={formData.receiveUpdates}
                       onChange={(e) => handleInputChange('receiveUpdates', e.target.checked)}
-                      className="rounded border-gray-300 text-purple-600 focus:ring-purple-500 mt-1 mr-3"
+                      className="rounded border-gray-300 text-[#9A9A4A] focus:ring-[#CACA78] mt-1 mr-3"
                     />
                     <span className="text-sm text-gray-700">
                       I would like to receive partnership opportunities and platform updates via email
@@ -547,7 +561,7 @@ export default function SignUpPage() {
                 <button
                   type="button"
                   onClick={handleNext}
-                  className="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors duration-200 font-medium flex items-center"
+                  className="px-6 py-3 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors duration-200 font-medium flex items-center"
                 >
                   Next
                   <ArrowRight className="w-5 h-5 ml-2" />
@@ -556,7 +570,7 @@ export default function SignUpPage() {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors duration-200 font-medium flex items-center disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-6 py-3 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors duration-200 font-medium flex items-center disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isLoading ? (
                     <>
@@ -578,7 +592,7 @@ export default function SignUpPage() {
           <div className="mt-8 text-center">
             <p className="text-gray-600">
               Already have an account?{' '}
-              <Link href="/auth/signin" className="text-purple-600 hover:text-purple-700 font-medium">
+              <Link href="/auth/signin" className="text-[#9A9A4A] hover:text-[#8A8A3A] font-medium">
                 Sign in
               </Link>
             </p>

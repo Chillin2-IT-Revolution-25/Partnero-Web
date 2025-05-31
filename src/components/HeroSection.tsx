@@ -55,7 +55,7 @@ export default function HeroSection({ onBrowseClick }: HeroSectionProps) {
               <div>
                 <button
                   onClick={handleGetStarted}
-                  className="bg-black text-white px-6 sm:px-8 lg:px-9 py-4 sm:py-4 lg:py-6 rounded-full font-medium text-base sm:text-lg hover:bg-gray-800 transition-colors duration-200"
+                  className="bg-black text-white px-6 sm:px-8 lg:px-9 py-4 sm:py-4 lg:py-5 rounded-full font-medium text-base sm:text-lg hover:bg-gray-800 transition-colors duration-200"
                   style={{ fontFamily: 'Lato, sans-serif' }}
                 >
                   GET STARTED

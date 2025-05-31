@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Eye, EyeOff, Mail, Lock, ArrowRight, AlertCircle } from 'lucide-react'
+import Logo from '../../../assets/logo/Logo.svg'
 
 export default function SignInPage() {
   const router = useRouter()
@@ -99,21 +100,28 @@ export default function SignInPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-purple-50 flex items-center justify-center p-4">
-      {/* Background decoration */}
+    <div className="min-h-screen bg-gradient-to-br from-[#CACA78]/10 via-[#CACA78]/5 to-[#9A9A4A]/15 flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Add Google Fonts */}
+      <style jsx global>{`
+        @import url('https://fonts.googleapis.com/css2?family=K2D:wght@400;700;800&family=Lato:wght@400;700&display=swap');
+      `}</style>
+      
+      {/* Background decoration with enhanced olive colors */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-100 rounded-full mix-blend-multiply filter blur-xl opacity-70"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-pink-100 rounded-full mix-blend-multiply filter blur-xl opacity-70"></div>
+        <div className="absolute -top-80 -left-80 w-160 h-160 bg-[#CACA78]/50 rounded-full filter blur-3xl opacity-80"></div>
+        <div className="absolute -bottom-80 -right-80 w-160 h-160 bg-[#9A9A4A]/45 rounded-full filter blur-3xl opacity-80"></div>
       </div>
 
       <div className="relative w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center space-x-3">
-            <div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl flex items-center justify-center">
-              <span className="text-white font-bold text-lg">P</span>
-            </div>
-            <span className="text-2xl font-bold text-gray-900">Partnero</span>
+            <img 
+              src={Logo.src}
+              alt="Partnero Logo"
+              className="w-12 h-12 rounded-xl object-cover" 
+            />
+            <span className="text-3xl font-bold text-gray-900" style={{ fontFamily: 'K2D, sans-serif' }}>Partnero</span>
           </Link>
           <p className="text-gray-600 mt-2">Welcome back to your partnership hub</p>
         </div>
@@ -170,12 +178,12 @@ export default function SignInPage() {
                 Email Address
               </label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#9A9A4A] w-5 h-5" />
                 <input
                   type="email"
                   value={formData.email}
                   onChange={(e) => handleInputChange('email', e.target.value)}
-                  className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent ${
+                  className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#CACA78] focus:border-transparent ${
                     errors.email ? 'border-red-500' : 'border-gray-300'
                   }`}
                   placeholder="your.email@example.com"
@@ -190,12 +198,12 @@ export default function SignInPage() {
                 Password
               </label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#9A9A4A] w-5 h-5" />
                 <input
                   type={showPassword ? 'text' : 'password'}
                   value={formData.password}
                   onChange={(e) => handleInputChange('password', e.target.value)}
-                  className={`w-full pl-10 pr-12 py-3 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent ${
+                  className={`w-full pl-10 pr-12 py-3 border rounded-lg focus:ring-2 focus:ring-[#CACA78] focus:border-transparent ${
                     errors.password ? 'border-red-500' : 'border-gray-300'
                   }`}
                   placeholder="Enter your password"
@@ -216,11 +224,11 @@ export default function SignInPage() {
               <label className="flex items-center">
                 <input
                   type="checkbox"
-                  className="rounded border-gray-300 text-purple-600 focus:ring-purple-500"
+                  className="rounded border-gray-300 text-[#9A9A4A] focus:ring-[#CACA78]"
                 />
                 <span className="ml-2 text-sm text-gray-600">Remember me</span>
               </label>
-              <Link href="/auth/forgot-password" className="text-sm text-purple-600 hover:text-purple-700">
+              <Link href="/auth/forgot-password" className="text-sm text-[#9A9A4A] hover:text-[#8A8A3A]">
                 Forgot password?
               </Link>
             </div>
@@ -229,7 +237,7 @@ export default function SignInPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-purple-600 text-white py-3 px-4 rounded-lg hover:bg-purple-700 transition-colors duration-200 font-medium flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-black text-white py-3 px-4 rounded-lg hover:bg-gray-800 transition-colors duration-200 font-medium flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isLoading ? (
                 <>
@@ -280,7 +288,7 @@ export default function SignInPage() {
           <div className="mt-8 text-center">
             <p className="text-gray-600">
               Don't have an account?{' '}
-              <Link href="/auth/signup" className="text-purple-600 hover:text-purple-700 font-medium">
+              <Link href="/auth/signup" className="text-[#9A9A4A] hover:text-[#8A8A3A] font-medium">
                 Sign up for free
               </Link>
             </p>
@@ -291,9 +299,9 @@ export default function SignInPage() {
         <div className="text-center mt-8">
           <p className="text-gray-500 text-sm">
             By signing in, you agree to our{' '}
-            <Link href="/terms" className="text-purple-600 hover:text-purple-700">Terms of Service</Link>
+            <Link href="/terms" className="text-[#9A9A4A] hover:text-[#8A8A3A]">Terms of Service</Link>
             {' '}and{' '}
-            <Link href="/privacy" className="text-purple-600 hover:text-purple-700">Privacy Policy</Link>
+            <Link href="/privacy" className="text-[#9A9A4A] hover:text-[#8A8A3A]">Privacy Policy</Link>
           </p>
         </div>
       </div>
