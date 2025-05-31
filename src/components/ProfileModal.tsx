@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { X, User, Settings, LogOut, Camera, MapPin, Mail, Phone, Globe, Save, Edit3, Check } from 'lucide-react'
 import Logo from '../assets/logo/Logo.svg'
 
@@ -27,6 +27,27 @@ export default function ProfileModal({ user, onClose, onLogout }: ProfileModalPr
   const [isEditing, setIsEditing] = useState(false)
   const [editedUser, setEditedUser] = useState(user)
   const [showSaveSuccess, setShowSaveSuccess] = useState(false)
+
+  // Prevent body scroll when modal is open
+  useEffect(() => {
+    // Store current scroll position
+    const scrollY = window.scrollY
+    document.body.style.position = 'fixed'
+    document.body.style.top = `-${scrollY}px`
+    document.body.style.width = '100%'
+
+    // Cleanup function
+    return () => {
+      // Restore scroll position
+      const scrollY = document.body.style.top
+      document.body.style.position = ''
+      document.body.style.top = ''
+      document.body.style.width = ''
+      if (scrollY) {
+        window.scrollTo(0, parseInt(scrollY || '0') * -1)
+      }
+    }
+  }, [])
 
   const handleSave = () => {
     // Here you would typically save to your backend
@@ -612,5 +633,5 @@ export default function ProfileModal({ user, onClose, onLogout }: ProfileModalPr
         </div>
       </div>
     </>
-  )
-}
+  );
+};

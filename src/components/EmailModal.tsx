@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { X, Send, User, Mail, MessageSquare, Paperclip, CheckCircle, AlertCircle } from 'lucide-react'
 import { 
   collaborationTypes, 
@@ -29,6 +29,27 @@ export default function EmailModal({ businessId, onClose, isLoggedIn }: EmailMod
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [errors, setErrors] = useState<Record<string, string>>({})
+
+  // Prevent body scroll when modal is open
+  useEffect(() => {
+    // Store current scroll position
+    const scrollY = window.scrollY
+    document.body.style.position = 'fixed'
+    document.body.style.top = `-${scrollY}px`
+    document.body.style.width = '100%'
+
+    // Cleanup function
+    return () => {
+      // Restore scroll position
+      const scrollY = document.body.style.top
+      document.body.style.position = ''
+      document.body.style.top = ''
+      document.body.style.width = ''
+      if (scrollY) {
+        window.scrollTo(0, parseInt(scrollY || '0') * -1)
+      }
+    }
+  }, [])
 
   // Get business data using the helper function
   const business = getBusinessById(businessId) || {
