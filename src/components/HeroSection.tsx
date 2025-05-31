@@ -15,11 +15,6 @@ export default function HeroSection({ onBrowseClick }: HeroSectionProps) {
 
   return (
     <>
-      {/* Add Google Fonts */}
-      <style jsx global>{`
-        @import url('https://fonts.googleapis.com/css2?family=K2D:wght@400;700;800&family=Lato:wght@400;700&family=Kanit:wght@400;500;600;700&display=swap');
-      `}</style>
-      
       <section className="relative bg-white py-8 sm:py-12 lg:py-16 overflow-hidden w-full">
         {/* Background Image */}
         <div className="absolute flex items-start justify-center pointer-events-none select-none mt-[26%] w-full">
@@ -115,7 +110,7 @@ export default function HeroSection({ onBrowseClick }: HeroSectionProps) {
               
               {/* Service for Service */}
               <div className="flex flex-col lg:flex-row items-center justify-between w-full lg:w-[80%] gap-4 lg:gap-0">
-                <div className="flex flex-col sm:flex-row items-center lg:items-start space-y-4 sm:space-y-0 sm:space-x-8 lg:space-x-24 text-center lg:text-left">
+                <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-8 lg:space-x-24 text-center lg:text-left">
                   <span className="text-4xl sm:text-5xl lg:text-7xl font-black text-black" style={{ fontFamily: 'Kanit, sans-serif' }}>1.</span>
                   <div>
                     <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white" style={{ fontFamily: 'Kanit, sans-serif' }}>
@@ -134,7 +129,7 @@ export default function HeroSection({ onBrowseClick }: HeroSectionProps) {
 
               {/* Service for Money */}
               <div className="flex flex-col lg:flex-row items-center justify-between w-full lg:w-[80%] gap-4 lg:gap-0">
-                <div className="flex flex-col sm:flex-row items-center lg:items-start space-y-4 sm:space-y-0 sm:space-x-8 lg:space-x-24 text-center lg:text-left">
+                <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-8 lg:space-x-24 text-center lg:text-left">
                   <span className="text-4xl sm:text-5xl lg:text-7xl font-black text-black" style={{ fontFamily: 'Kanit, sans-serif' }}>2.</span>
                   <div>
                     <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white" style={{ fontFamily: 'Kanit, sans-serif' }}>
@@ -144,7 +139,7 @@ export default function HeroSection({ onBrowseClick }: HeroSectionProps) {
                 </div>
                 <div className="text-center lg:text-left lg:max-w-md">
                   <p className="text-black text-sm sm:text-base lg:text-lg" style={{ fontFamily: 'Lato, sans-serif' }}>
-                    Offer your services to other businesses for a fee.
+                    Offer your services to other businesses for a fee. Get a chance to be noticed.
                   </p>
                 </div>
               </div>
@@ -153,7 +148,7 @@ export default function HeroSection({ onBrowseClick }: HeroSectionProps) {
 
               {/* Money for Service */}
               <div className="flex flex-col lg:flex-row items-center justify-between w-full lg:w-[80%] gap-4 lg:gap-0">
-                <div className="flex flex-col sm:flex-row items-center lg:items-start space-y-4 sm:space-y-0 sm:space-x-8 lg:space-x-24 text-center lg:text-left">
+                <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-8 lg:space-x-24 text-center lg:text-left">
                   <span className="text-4xl sm:text-5xl lg:text-7xl font-black text-black" style={{ fontFamily: 'Kanit, sans-serif' }}>3.</span>
                   <div>
                     <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white" style={{ fontFamily: 'Kanit, sans-serif' }}>
