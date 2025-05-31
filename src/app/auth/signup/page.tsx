@@ -5,9 +5,11 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Eye, EyeOff, Mail, Lock, User, Building, ArrowRight, AlertCircle, Check } from 'lucide-react'
 import Logo from '../../../assets/logo/Logo.svg'
+import { useAuth } from '@/contexts/AuthContext'
 
 export default function SignUpPage() {
   const router = useRouter()
+  const { login } = useAuth()
   const [currentStep, setCurrentStep] = useState(1)
   const [formData, setFormData] = useState({
     // Personal Info
@@ -154,21 +156,20 @@ export default function SignUpPage() {
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 2000))
       
-      // Mock successful registration
-      localStorage.setItem('partnero_auth', JSON.stringify({
-        isLoggedIn: true,
-        user: {
-          name: `${formData.firstName} ${formData.lastName}`,
-          email: formData.email,
-          avatar: '/api/placeholder/40/40',
-          business: {
-            name: formData.businessName,
-            description: formData.description,
-            location: 'Not specified',
-            category: formData.category
-          }
+      const userData = {
+        name: `${formData.firstName} ${formData.lastName}`,
+        email: formData.email,
+        avatar: '/api/placeholder/40/40',
+        business: {
+          name: formData.businessName,
+          description: formData.description,
+          location: 'Not specified',
+          category: formData.category
         }
-      }))
+      }
+      
+      // Use the login function from context
+      login(userData)
       
       // Redirect to home page
       router.push('/')

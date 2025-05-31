@@ -5,9 +5,11 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Eye, EyeOff, Mail, Lock, ArrowRight, AlertCircle } from 'lucide-react'
 import Logo from '../../../assets/logo/Logo.svg'
+import { useAuth } from '@/contexts/AuthContext'
 
 export default function SignInPage() {
   const router = useRouter()
+  const { login } = useAuth()
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -64,21 +66,20 @@ export default function SignInPage() {
       
       // Mock authentication - in real app, validate credentials
       if (formData.email === 'demo@partnero.com' && formData.password === 'password') {
-        // Store auth state (in real app, use proper auth system)
-        localStorage.setItem('partnero_auth', JSON.stringify({
-          isLoggedIn: true,
-          user: {
-            name: 'John Doe',
-            email: formData.email,
-            avatar: '/api/placeholder/40/40',
-            business: {
-              name: 'Creative Solutions',
-              description: 'Digital marketing and content creation services',
-              location: 'New York, NY',
-              category: 'Digital Marketing'
-            }
+        const userData = {
+          name: 'John Doe',
+          email: formData.email,
+          avatar: '/api/placeholder/40/40',
+          business: {
+            name: 'Creative Solutions',
+            description: 'Digital marketing and content creation services',
+            location: 'New York, NY',
+            category: 'Digital Marketing'
           }
-        }))
+        }
+        
+        // Use the login function from context
+        login(userData)
         
         // Redirect to home page
         router.push('/')
@@ -124,6 +125,15 @@ export default function SignInPage() {
           <div className="text-center mb-6">
             <h1 className="text-2xl font-bold text-gray-900 mb-2">Sign In</h1>
             <p className="text-gray-600">Enter your credentials to access your account</p>
+          </div>
+
+          {/* Demo Credentials Notice */}
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+            <div className="text-center">
+              <p className="text-blue-800 text-sm font-medium mb-1">Demo Credentials</p>
+              <p className="text-blue-700 text-xs">Email: demo@partnero.com</p>
+              <p className="text-blue-700 text-xs">Password: password</p>
+            </div>
           </div>
 
           {/* Error Message */}

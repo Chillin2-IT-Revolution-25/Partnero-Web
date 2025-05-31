@@ -20,14 +20,13 @@ interface User {
 
 interface NavbarProps {
   isLoggedIn: boolean
-  user: User
-  onLogin: () => void
+  user: User | null
   onProfileClick: () => void
   onLogout: () => void
   onBrowseClick?: () => void
 }
 
-export default function Navbar({ isLoggedIn, user, onLogin, onProfileClick, onLogout, onBrowseClick }: NavbarProps) {
+export default function Navbar({ isLoggedIn, user, onProfileClick, onLogout, onBrowseClick }: NavbarProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false)
   const pathname = usePathname()
@@ -117,7 +116,7 @@ export default function Navbar({ isLoggedIn, user, onLogin, onProfileClick, onLo
                   {/* User Initial Avatar */}
                   <div className="w-8 h-8 bg-[#CACA78] rounded-full flex items-center justify-center">
                     <span className="text-white font-semibold text-sm">
-                      {getInitials(user.name)}
+                      {user ? getInitials(user.name) : 'U'}
                     </span>
                   </div>
                   <ChevronDown className="w-4 h-4 text-gray-500" />
@@ -127,8 +126,8 @@ export default function Navbar({ isLoggedIn, user, onLogin, onProfileClick, onLo
                 {isProfileDropdownOpen && (
                   <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2">
                     <div className="px-4 py-2 border-b border-gray-100">
-                      <p className="text-sm font-medium text-gray-900">{user.name}</p>
-                      <p className="text-xs text-gray-500">{user.email}</p>
+                      <p className="text-sm font-medium text-gray-900">{user?.name || 'User'}</p>
+                      <p className="text-xs text-gray-500">{user?.email || 'user@example.com'}</p>
                     </div>
                     <button
                       onClick={() => {

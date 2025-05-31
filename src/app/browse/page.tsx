@@ -4,8 +4,10 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import BusinessList from '@/components/BusinessList'
 import EmailModal from '@/components/EmailModal'
+import { useAuth } from '@/contexts/AuthContext'
 
 export default function BrowsePage() {
+  const { isLoggedIn } = useAuth()
   const [showEmailModal, setShowEmailModal] = useState(false)
   const [selectedBusinessId, setSelectedBusinessId] = useState<string | null>(null)
   const router = useRouter()
@@ -22,7 +24,7 @@ export default function BrowsePage() {
   return (
     <div className="bg-gray-50">
       <BusinessList 
-        isLoggedIn={true} // This will be checked internally by the component
+        isLoggedIn={isLoggedIn}
         onBusinessClick={handleBusinessClick}
         onEmailBusiness={handleEmailBusiness}
       />
@@ -34,8 +36,8 @@ export default function BrowsePage() {
             setShowEmailModal(false)
             setSelectedBusinessId(null)
           }}
-           isLoggedIn={false}
-           />
+          isLoggedIn={isLoggedIn}
+        />
       )}
     </div>
   )
