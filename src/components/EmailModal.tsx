@@ -10,16 +10,29 @@ import {
 } from '@/data/mockFormData'
 import { getBusinessById } from '@/data/mockBusinesses'
 
+interface User {
+  name: string
+  email: string
+  avatar: string
+  business: {
+    name: string
+    description: string
+    location: string
+    category: string
+  }
+}
+
 interface EmailModalProps {
   businessId: string
   onClose: () => void
   isLoggedIn: boolean
+  user?: User | null
 }
 
-export default function EmailModal({ businessId, onClose, isLoggedIn }: EmailModalProps) {
+export default function EmailModal({ businessId, onClose, isLoggedIn, user }: EmailModalProps) {
   const [formData, setFormData] = useState({
-    name: isLoggedIn ? 'John Doe' : '',
-    email: isLoggedIn ? 'john@example.com' : '',
+    name: isLoggedIn && user ? user.name : '',
+    email: isLoggedIn && user ? user.email : '',
     subject: '',
     message: '',
     collaborationType: '',
@@ -50,6 +63,17 @@ export default function EmailModal({ businessId, onClose, isLoggedIn }: EmailMod
       }
     }
   }, [])
+
+  // Update form data when user changes
+  useEffect(() => {
+    if (isLoggedIn && user) {
+      setFormData(prev => ({
+        ...prev,
+        name: user.name,
+        email: user.email
+      }))
+    }
+  }, [isLoggedIn, user])
 
   // Get business data using the helper function
   const business = getBusinessById(businessId) || {
@@ -154,7 +178,7 @@ export default function EmailModal({ businessId, onClose, isLoggedIn }: EmailMod
             </p>
             <button
               onClick={onClose}
-              className="w-full bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition-colors duration-200 font-medium"
+              className="w-full bg-[#9A9A4A] text-white py-3 rounded-lg hover:bg-[#8A8A3A] transition-colors duration-200 font-medium"
             >
               Close
             </button>
@@ -191,7 +215,7 @@ export default function EmailModal({ businessId, onClose, isLoggedIn }: EmailMod
           </div>
 
           {/* Content */}
-          <div className="p-6 overflow-y-auto max-h-[calc(90vh-80px)]">
+          <div className="p-6 overflow-y-auto max-h-[calc(90vh-140px)]">
             {!isLoggedIn && (
               <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6">
                 <div className="flex items-start">
@@ -216,7 +240,7 @@ export default function EmailModal({ businessId, onClose, isLoggedIn }: EmailMod
                     type="text"
                     value={formData.name}
                     onChange={(e) => handleInputChange('name', e.target.value)}
-                    className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent ${
+                    className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-[#CACA78] focus:border-transparent ${
                       errors.name ? 'border-red-500' : 'border-gray-300'
                     }`}
                     placeholder="Enter your full name"
@@ -233,7 +257,7 @@ export default function EmailModal({ businessId, onClose, isLoggedIn }: EmailMod
                     type="email"
                     value={formData.email}
                     onChange={(e) => handleInputChange('email', e.target.value)}
-                    className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent ${
+                    className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-[#CACA78] focus:border-transparent ${
                       errors.email ? 'border-red-500' : 'border-gray-300'
                     }`}
                     placeholder="your.email@example.com"
@@ -250,7 +274,7 @@ export default function EmailModal({ businessId, onClose, isLoggedIn }: EmailMod
                 <select
                   value={formData.collaborationType}
                   onChange={(e) => handleInputChange('collaborationType', e.target.value)}
-                  className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent ${
+                  className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-[#CACA78] focus:border-transparent ${
                     errors.collaborationType ? 'border-red-500' : 'border-gray-300'
                   }`}
                 >
@@ -271,7 +295,7 @@ export default function EmailModal({ businessId, onClose, isLoggedIn }: EmailMod
                   type="text"
                   value={formData.subject}
                   onChange={(e) => handleInputChange('subject', e.target.value)}
-                  className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent ${
+                  className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-[#CACA78] focus:border-transparent ${
                     errors.subject ? 'border-red-500' : 'border-gray-300'
                   }`}
                   placeholder="Enter email subject"
@@ -305,7 +329,7 @@ export default function EmailModal({ businessId, onClose, isLoggedIn }: EmailMod
                   type="url"
                   value={formData.portfolio}
                   onChange={(e) => handleInputChange('portfolio', e.target.value)}
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#CACA78] focus:border-transparent"
                   placeholder="https://instagram.com/yourusername or your website"
                 />
                 <p className="text-xs text-gray-500 mt-1">Share your portfolio or main social media profile</p>
@@ -319,7 +343,7 @@ export default function EmailModal({ businessId, onClose, isLoggedIn }: EmailMod
                 <select
                   value={formData.budget}
                   onChange={(e) => handleInputChange('budget', e.target.value)}
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#CACA78] focus:border-transparent"
                 >
                   {budgetRanges.map(range => (
                     <option key={range.value} value={range.value}>{range.label}</option>
@@ -337,7 +361,7 @@ export default function EmailModal({ businessId, onClose, isLoggedIn }: EmailMod
                   value={formData.message}
                   onChange={(e) => handleInputChange('message', e.target.value)}
                   rows={6}
-                  className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none ${
+                  className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-[#CACA78] focus:border-transparent resize-none ${
                     errors.message ? 'border-red-500' : 'border-gray-300'
                   }`}
                   placeholder="Tell them about yourself, your audience, and why you'd like to collaborate. Be specific about your proposal and what value you can bring to their brand."
@@ -363,24 +387,26 @@ export default function EmailModal({ businessId, onClose, isLoggedIn }: EmailMod
                 <button
                   type="button"
                   onClick={onClose}
-                  className="flex-1 px-4 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors duration-200 font-medium"
+                  className="flex-none w-20 sm:flex-1 px-2 sm:px-4 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors duration-200 font-medium text-sm sm:text-base"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="flex-1 px-4 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors duration-200 font-medium flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex-1 px-4 py-3 bg-[#9A9A4A] text-white rounded-lg hover:bg-[#8A8A3A] transition-colors duration-200 font-medium flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
                 >
                   {isSubmitting ? (
                     <>
                       <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
-                      Sending...
+                      <span className="hidden sm:inline">Sending...</span>
+                      <span className="sm:hidden">Sending</span>
                     </>
                   ) : (
                     <>
-                      <Send className="w-4 h-4 mr-2" />
-                      Send Message
+                      <Send className="w-4 h-4 mr-1 sm:mr-2" />
+                      <span className="hidden sm:inline">Send Message</span>
+                      <span className="sm:hidden">Send</span>
                     </>
                   )}
                 </button>
