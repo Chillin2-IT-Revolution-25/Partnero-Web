@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { X, User, Settings, LogOut, Camera, MapPin, Mail, Phone, Globe, Save, Edit3, Check } from 'lucide-react'
+import Logo from '../assets/logo/Logo.svg'
 
 interface User {
   name: string
@@ -57,6 +58,10 @@ export default function ProfileModal({ user, onClose, onLogout }: ProfileModalPr
     }
   }
 
+  const getInitials = (name: string) => {
+    return name.charAt(0).toUpperCase()
+  }
+
   const menuItems = [
     { id: 'profile', label: 'Personal Info', icon: <User className="w-5 h-5" /> },
     { id: 'business', label: 'Business Profile', icon: <Settings className="w-5 h-5" /> },
@@ -79,6 +84,11 @@ export default function ProfileModal({ user, onClose, onLogout }: ProfileModalPr
 
   return (
     <>
+      {/* Add Google Fonts */}
+      <style jsx global>{`
+        @import url('https://fonts.googleapis.com/css2?family=K2D:wght@400;700;800&family=Lato:wght@400;700&display=swap');
+      `}</style>
+
       {/* Backdrop */}
       <div 
         className="fixed inset-0 bg-black/20 backdrop-blur-sm z-50 flex items-center justify-center p-4"
@@ -94,25 +104,12 @@ export default function ProfileModal({ user, onClose, onLogout }: ProfileModalPr
             {/* Logo */}
             <div className="p-6 border-b border-gray-200">
               <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold text-sm">P</span>
-                </div>
-                <span className="font-semibold text-gray-900">Partnero</span>
-              </div>
-            </div>
-
-            {/* User Info */}
-            <div className="p-6 border-b border-gray-200">
-              <div className="flex items-center space-x-3">
                 <img 
-                  src={user.avatar} 
-                  alt={user.name}
-                  className="w-12 h-12 rounded-full object-cover"
+                  src={Logo.src}
+                  alt="Partnero Logo"
+                  className="w-8 h-8 rounded-lg object-cover" 
                 />
-                <div>
-                  <p className="font-medium text-gray-900 text-sm">{user.name}</p>
-                  <p className="text-gray-500 text-xs">{user.email}</p>
-                </div>
+                <span className="text-xl font-bold text-gray-900" style={{ fontFamily: 'K2D, sans-serif' }}>Partnero</span>
               </div>
             </div>
 
@@ -125,7 +122,7 @@ export default function ProfileModal({ user, onClose, onLogout }: ProfileModalPr
                     onClick={() => setActiveTab(item.id as any)}
                     className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors duration-200 ${
                       activeTab === item.id 
-                        ? 'bg-purple-100 text-purple-700 border border-purple-200' 
+                        ? 'bg-[#CACA78] text-white border border-[#9A9A4A]' 
                         : 'text-gray-600 hover:bg-gray-100'
                     }`}
                   >
@@ -167,7 +164,7 @@ export default function ProfileModal({ user, onClose, onLogout }: ProfileModalPr
                 {!isEditing ? (
                   <button
                     onClick={() => setIsEditing(true)}
-                    className="flex items-center space-x-2 px-4 py-2 text-purple-600 hover:bg-purple-50 rounded-lg transition-colors duration-200"
+                    className="flex items-center space-x-2 px-4 py-2 text-[#9A9A4A] hover:bg-[#CACA78]/10 rounded-lg transition-colors duration-200"
                   >
                     <Edit3 className="w-4 h-4" />
                     <span>Edit</span>
@@ -182,7 +179,7 @@ export default function ProfileModal({ user, onClose, onLogout }: ProfileModalPr
                     </button>
                     <button
                       onClick={handleSave}
-                      className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors duration-200 flex items-center space-x-2"
+                      className="px-4 py-2 bg-[#9A9A4A] text-white rounded-lg hover:bg-[#8A8A3A] transition-colors duration-200 flex items-center space-x-2"
                     >
                       <Save className="w-4 h-4" />
                       <span>Save</span>
@@ -206,23 +203,23 @@ export default function ProfileModal({ user, onClose, onLogout }: ProfileModalPr
                   {/* Avatar Section */}
                   <div className="flex items-center space-x-6">
                     <div className="relative">
-                      <img 
-                        src={editedUser.avatar} 
-                        alt={editedUser.name}
-                        className="w-24 h-24 rounded-full object-cover"
-                      />
+                      <div className="w-20 h-20 bg-[#CACA78] rounded-full flex items-center justify-center">
+                        <span className="text-white font-bold text-2xl">
+                          {getInitials(editedUser.name)}
+                        </span>
+                      </div>
                       {isEditing && (
-                        <button className="absolute bottom-0 right-0 p-2 bg-purple-600 text-white rounded-full shadow-lg hover:bg-purple-700 transition-colors duration-200">
+                        <button className="absolute bottom-0 right-0 p-2 bg-[#9A9A4A] text-white rounded-full shadow-lg hover:bg-[#8A8A3A] transition-colors duration-200">
                           <Camera className="w-4 h-4" />
                         </button>
                       )}
                     </div>
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900">Profile Picture</h3>
-                      <p className="text-gray-500 text-sm">Choose a photo that represents you well</p>
+                      <p className="text-gray-500 text-sm">Your profile displays the first letter of your name</p>
                       {isEditing && (
-                        <button className="mt-2 text-purple-600 hover:text-purple-700 text-sm font-medium">
-                          Change photo
+                        <button className="mt-2 text-[#9A9A4A] hover:text-[#8A8A3A] text-sm font-medium">
+                          Change display name to update initial
                         </button>
                       )}
                     </div>
@@ -237,7 +234,7 @@ export default function ProfileModal({ user, onClose, onLogout }: ProfileModalPr
                           type="text"
                           value={editedUser.name}
                           onChange={(e) => handleInputChange('name', e.target.value)}
-                          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#CACA78] focus:border-transparent"
                         />
                       ) : (
                         <p className="p-3 bg-gray-50 rounded-lg text-gray-900">{editedUser.name}</p>
@@ -251,7 +248,7 @@ export default function ProfileModal({ user, onClose, onLogout }: ProfileModalPr
                           type="email"
                           value={editedUser.email}
                           onChange={(e) => handleInputChange('email', e.target.value)}
-                          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#CACA78] focus:border-transparent"
                         />
                       ) : (
                         <p className="p-3 bg-gray-50 rounded-lg text-gray-900">{editedUser.email}</p>
@@ -264,7 +261,7 @@ export default function ProfileModal({ user, onClose, onLogout }: ProfileModalPr
                         <input
                           type="tel"
                           placeholder="+1 (555) 123-4567"
-                          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#CACA78] focus:border-transparent"
                         />
                       ) : (
                         <p className="p-3 bg-gray-50 rounded-lg text-gray-500">+1 (555) 123-4567</p>
@@ -277,7 +274,7 @@ export default function ProfileModal({ user, onClose, onLogout }: ProfileModalPr
                         <input
                           type="url"
                           placeholder="https://yourwebsite.com"
-                          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#CACA78] focus:border-transparent"
                         />
                       ) : (
                         <p className="p-3 bg-gray-50 rounded-lg text-gray-500">https://yourwebsite.com</p>
@@ -289,7 +286,7 @@ export default function ProfileModal({ user, onClose, onLogout }: ProfileModalPr
                       {isEditing ? (
                         <input
                           type="date"
-                          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#CACA78] focus:border-transparent"
                         />
                       ) : (
                         <p className="p-3 bg-gray-50 rounded-lg text-gray-500">January 15, 1990</p>
@@ -299,7 +296,7 @@ export default function ProfileModal({ user, onClose, onLogout }: ProfileModalPr
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">Gender</label>
                       {isEditing ? (
-                        <select className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                        <select className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#CACA78] focus:border-transparent">
                           <option value="">Prefer not to say</option>
                           <option value="male">Male</option>
                           <option value="female">Female</option>
@@ -318,7 +315,7 @@ export default function ProfileModal({ user, onClose, onLogout }: ProfileModalPr
                       <textarea
                         rows={4}
                         placeholder="Tell us about yourself..."
-                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
+                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#CACA78] focus:border-transparent resize-none"
                         defaultValue="Passionate content creator and digital marketer with 5+ years of experience. I love connecting brands with their audiences through authentic storytelling."
                       />
                     ) : (
@@ -341,7 +338,7 @@ export default function ProfileModal({ user, onClose, onLogout }: ProfileModalPr
                           type="text"
                           value={editedUser.business.name}
                           onChange={(e) => handleInputChange('name', e.target.value, true)}
-                          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#CACA78] focus:border-transparent"
                         />
                       ) : (
                         <p className="p-3 bg-gray-50 rounded-lg text-gray-900">{editedUser.business.name}</p>
@@ -354,7 +351,7 @@ export default function ProfileModal({ user, onClose, onLogout }: ProfileModalPr
                         <select
                           value={editedUser.business.category}
                           onChange={(e) => handleInputChange('category', e.target.value, true)}
-                          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#CACA78] focus:border-transparent"
                         >
                           {categories.map(category => (
                             <option key={category} value={category}>{category}</option>
@@ -372,7 +369,7 @@ export default function ProfileModal({ user, onClose, onLogout }: ProfileModalPr
                           type="text"
                           value={editedUser.business.location}
                           onChange={(e) => handleInputChange('location', e.target.value, true)}
-                          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#CACA78] focus:border-transparent"
                         />
                       ) : (
                         <p className="p-3 bg-gray-50 rounded-lg text-gray-900">{editedUser.business.location}</p>
@@ -386,7 +383,7 @@ export default function ProfileModal({ user, onClose, onLogout }: ProfileModalPr
                           value={editedUser.business.description}
                           onChange={(e) => handleInputChange('description', e.target.value, true)}
                           rows={4}
-                          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
+                          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#CACA78] focus:border-transparent resize-none"
                         />
                       ) : (
                         <p className="p-3 bg-gray-50 rounded-lg text-gray-900">{editedUser.business.description}</p>
@@ -396,7 +393,7 @@ export default function ProfileModal({ user, onClose, onLogout }: ProfileModalPr
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">Company Size</label>
                       {isEditing ? (
-                        <select className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                        <select className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#CACA78] focus:border-transparent">
                           <option value="1-10">1-10 employees</option>
                           <option value="11-50">11-50 employees</option>
                           <option value="51-200">51-200 employees</option>
@@ -416,7 +413,7 @@ export default function ProfileModal({ user, onClose, onLogout }: ProfileModalPr
                           placeholder="2020"
                           min="1900"
                           max="2024"
-                          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#CACA78] focus:border-transparent"
                         />
                       ) : (
                         <p className="p-3 bg-gray-50 rounded-lg text-gray-900">2020</p>
@@ -429,7 +426,7 @@ export default function ProfileModal({ user, onClose, onLogout }: ProfileModalPr
                     <label className="block text-sm font-medium text-gray-700 mb-4">Business Images</label>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                       {[1, 2, 3, 4].map(i => (
-                        <div key={i} className="aspect-square bg-gray-100 rounded-lg flex items-center justify-center border-2 border-dashed border-gray-300 hover:border-purple-500 transition-colors duration-200 cursor-pointer">
+                        <div key={i} className="aspect-square bg-gray-100 rounded-lg flex items-center justify-center border-2 border-dashed border-gray-300 hover:border-[#CACA78] transition-colors duration-200 cursor-pointer">
                           <Camera className="w-8 h-8 text-gray-400" />
                         </div>
                       ))}
@@ -448,7 +445,7 @@ export default function ProfileModal({ user, onClose, onLogout }: ProfileModalPr
                             <input
                               type="url"
                               placeholder="https://instagram.com/yourbusiness"
-                              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#CACA78] focus:border-transparent"
                             />
                           ) : (
                             <p className="p-3 bg-gray-50 rounded-lg text-gray-500">@creativestudios</p>
@@ -460,7 +457,7 @@ export default function ProfileModal({ user, onClose, onLogout }: ProfileModalPr
                             <input
                               type="url"
                               placeholder="https://youtube.com/yourbusiness"
-                              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#CACA78] focus:border-transparent"
                             />
                           ) : (
                             <p className="p-3 bg-gray-50 rounded-lg text-gray-500">Creative Studios Channel</p>
@@ -472,7 +469,7 @@ export default function ProfileModal({ user, onClose, onLogout }: ProfileModalPr
                             <input
                               type="url"
                               placeholder="https://linkedin.com/company/yourbusiness"
-                              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#CACA78] focus:border-transparent"
                             />
                           ) : (
                             <p className="p-3 bg-gray-50 rounded-lg text-gray-500">Creative Studios LLC</p>
@@ -484,7 +481,7 @@ export default function ProfileModal({ user, onClose, onLogout }: ProfileModalPr
                             <input
                               type="url"
                               placeholder="https://yourbusiness.com"
-                              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#CACA78] focus:border-transparent"
                             />
                           ) : (
                             <p className="p-3 bg-gray-50 rounded-lg text-gray-500">creativestudios.com</p>
@@ -495,20 +492,20 @@ export default function ProfileModal({ user, onClose, onLogout }: ProfileModalPr
                   </div>
 
                   {/* Visibility Settings */}
-                  <div className="bg-purple-50 border border-purple-200 rounded-lg p-6">
-                    <h3 className="font-medium text-purple-900 mb-4">Business Visibility Settings</h3>
+                  <div className="bg-[#CACA78]/10 border border-[#CACA78]/30 rounded-lg p-6">
+                    <h3 className="font-medium text-[#8A8A3A] mb-4">Business Visibility Settings</h3>
                     <div className="space-y-3">
                       <label className="flex items-center">
-                        <input type="checkbox" className="rounded border-gray-300 text-purple-600 focus:ring-purple-500 mr-3" defaultChecked />
-                        <span className="text-purple-800 text-sm">Show my business in public listings</span>
+                        <input type="checkbox" className="rounded border-gray-300 text-[#9A9A4A] focus:ring-[#CACA78] mr-3" defaultChecked />
+                        <span className="text-[#8A8A3A] text-sm">Show my business in public listings</span>
                       </label>
                       <label className="flex items-center">
-                        <input type="checkbox" className="rounded border-gray-300 text-purple-600 focus:ring-purple-500 mr-3" defaultChecked />
-                        <span className="text-purple-800 text-sm">Allow direct contact from potential partners</span>
+                        <input type="checkbox" className="rounded border-gray-300 text-[#9A9A4A] focus:ring-[#CACA78] mr-3" defaultChecked />
+                        <span className="text-[#8A8A3A] text-sm">Allow direct contact from potential partners</span>
                       </label>
                       <label className="flex items-center">
-                        <input type="checkbox" className="rounded border-gray-300 text-purple-600 focus:ring-purple-500 mr-3" />
-                        <span className="text-purple-800 text-sm">Featured business (premium option)</span>
+                        <input type="checkbox" className="rounded border-gray-300 text-[#9A9A4A] focus:ring-[#CACA78] mr-3" />
+                        <span className="text-[#8A8A3A] text-sm">Featured business (premium option)</span>
                       </label>
                     </div>
                   </div>
@@ -526,28 +523,28 @@ export default function ProfileModal({ user, onClose, onLogout }: ProfileModalPr
                           <span className="text-gray-700 font-medium">Email notifications for new messages</span>
                           <p className="text-sm text-gray-500">Get notified when someone sends you a message</p>
                         </div>
-                        <input type="checkbox" className="rounded border-gray-300 text-purple-600 focus:ring-purple-500" defaultChecked />
+                        <input type="checkbox" className="rounded border-gray-300 text-[#9A9A4A] focus:ring-[#CACA78]" defaultChecked />
                       </label>
                       <label className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                         <div>
                           <span className="text-gray-700 font-medium">Email notifications for collaboration requests</span>
                           <p className="text-sm text-gray-500">Get notified about new partnership opportunities</p>
                         </div>
-                        <input type="checkbox" className="rounded border-gray-300 text-purple-600 focus:ring-purple-500" defaultChecked />
+                        <input type="checkbox" className="rounded border-gray-300 text-[#9A9A4A] focus:ring-[#CACA78]" defaultChecked />
                       </label>
                       <label className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                         <div>
                           <span className="text-gray-700 font-medium">SMS notifications</span>
                           <p className="text-sm text-gray-500">Receive important updates via text message</p>
                         </div>
-                        <input type="checkbox" className="rounded border-gray-300 text-purple-600 focus:ring-purple-500" />
+                        <input type="checkbox" className="rounded border-gray-300 text-[#9A9A4A] focus:ring-[#CACA78]" />
                       </label>
                       <label className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                         <div>
                           <span className="text-gray-700 font-medium">Marketing emails</span>
                           <p className="text-sm text-gray-500">Receive tips, news, and platform updates</p>
                         </div>
-                        <input type="checkbox" className="rounded border-gray-300 text-purple-600 focus:ring-purple-500" defaultChecked />
+                        <input type="checkbox" className="rounded border-gray-300 text-[#9A9A4A] focus:ring-[#CACA78]" defaultChecked />
                       </label>
                     </div>
                   </div>
@@ -560,21 +557,21 @@ export default function ProfileModal({ user, onClose, onLogout }: ProfileModalPr
                           <span className="text-gray-700 font-medium">Show my profile in search results</span>
                           <p className="text-sm text-gray-500">Allow others to find your profile when searching</p>
                         </div>
-                        <input type="checkbox" className="rounded border-gray-300 text-purple-600 focus:ring-purple-500" defaultChecked />
+                        <input type="checkbox" className="rounded border-gray-300 text-[#9A9A4A] focus:ring-[#CACA78]" defaultChecked />
                       </label>
                       <label className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                         <div>
                           <span className="text-gray-700 font-medium">Allow direct messages from other users</span>
                           <p className="text-sm text-gray-500">Let registered users contact you directly</p>
                         </div>
-                        <input type="checkbox" className="rounded border-gray-300 text-purple-600 focus:ring-purple-500" defaultChecked />
+                        <input type="checkbox" className="rounded border-gray-300 text-[#9A9A4A] focus:ring-[#CACA78]" defaultChecked />
                       </label>
                       <label className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                         <div>
                           <span className="text-gray-700 font-medium">Public activity feed</span>
                           <p className="text-sm text-gray-500">Show your recent activity to other users</p>
                         </div>
-                        <input type="checkbox" className="rounded border-gray-300 text-purple-600 focus:ring-purple-500" />
+                        <input type="checkbox" className="rounded border-gray-300 text-[#9A9A4A] focus:ring-[#CACA78]" />
                       </label>
                     </div>
                   </div>

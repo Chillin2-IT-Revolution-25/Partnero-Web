@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@import url('https://fonts.googleapis.com/css2?family=K2D:wght@400;700;800&family=Lato:wght@400;700&family=Kanit:wght@400;500;600;700&display=swap');
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
