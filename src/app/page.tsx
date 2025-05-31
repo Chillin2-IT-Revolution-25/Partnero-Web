@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react' // Add useEffect
 import { useRouter } from 'next/navigation'
 import Navbar from '@/components/Navbar'
 import HeroSection from '@/components/HeroSection'
@@ -22,6 +22,22 @@ export default function HomePage() {
     }
   })
 
+  // Add this useEffect to check for auth data on component mount
+  useEffect(() => {
+    const authData = localStorage.getItem('partnero_auth')
+    if (authData) {
+      try {
+        const parsedData = JSON.parse(authData)
+        if (parsedData.isLoggedIn) {
+          setIsLoggedIn(true)
+          setUser(parsedData.user)
+        }
+      } catch (error) {
+        console.error('Error parsing auth data:', error)
+      }
+    }
+  }, [])
+
   const handleLogin = () => {
     setIsLoggedIn(true)
   }
@@ -39,6 +55,10 @@ export default function HomePage() {
     router.push('/browse')
   }
 
+  const handleSignUpclick = () => {
+    router.push('/auth/signup')
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar 
@@ -50,7 +70,7 @@ export default function HomePage() {
         onBrowseClick={handleBrowseClick}
       />
       
-      <HeroSection onBrowseClick={handleBrowseClick} />
+      <HeroSection onBrowseClick={handleSignUpclick} />
       
       {showProfileModal && (
         <ProfileModal 

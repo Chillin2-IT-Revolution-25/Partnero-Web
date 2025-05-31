@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation' // Updated import
 import { Menu, X, Settings, LogOut, ChevronDown } from 'lucide-react'
 
 interface User {
@@ -45,6 +45,17 @@ export default function Navbar({ isLoggedIn, user, onLogin, onProfileClick, onLo
     return pathname.startsWith(href)
   }
 
+  // Add these new handlers
+  const router = useRouter() // Add this import at the top
+  
+  const handleLoginClick = () => {
+    router.push('/auth/signin')
+  }
+  
+  const handleSignUpClick = () => {
+    router.push('/auth/signup')
+  }
+
   return (
     <nav className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -79,13 +90,13 @@ export default function Navbar({ isLoggedIn, user, onLogin, onProfileClick, onLo
             {!isLoggedIn ? (
               <div className="flex items-center space-x-3">
                 <button
-                  onClick={onLogin}
+                  onClick={handleLoginClick} // Changed from onLogin
                   className="text-gray-600 hover:text-gray-900 font-medium transition-colors duration-200"
                 >
                   Login
                 </button>
                 <button
-                  onClick={onLogin}
+                  onClick={handleSignUpClick} // Changed from onLogin
                   className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors duration-200 font-medium"
                 >
                   Sign Up
