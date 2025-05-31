@@ -1,9 +1,10 @@
-// File path: src/components/Navbar.tsx
-
 'use client'
 
 import { useState } from 'react'
-import { Menu, X, User, Settings, LogOut, ChevronDown } from 'lucide-react'
+import Link from 'next/link'
+import { useRouter, usePathname } from 'next/navigation'
+import { Menu, X, Settings, LogOut, ChevronDown } from 'lucide-react'
+import Logo from '../assets/logo/Logo.svg'
 
 interface User {
   name: string
@@ -19,45 +20,73 @@ interface User {
 
 interface NavbarProps {
   isLoggedIn: boolean
-  user: User
-  onLogin: () => void
+  user: User | null
   onProfileClick: () => void
   onLogout: () => void
+  onBrowseClick?: () => void
 }
 
-export default function Navbar({ isLoggedIn, user, onLogin, onProfileClick, onLogout }: NavbarProps) {
+export default function Navbar({ isLoggedIn, user, onProfileClick, onLogout, onBrowseClick }: NavbarProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false)
+  const pathname = usePathname()
 
   const navLinks = [
-    { name: 'Home', href: '#' },
-    { name: 'Browse', href: '#businesses' },
-    { name: 'About', href: '#about' },
-    { name: 'Contact', href: '#contact' }
+    { name: 'Home', href: '/' },
+    { name: 'Browse', href: '/browse' },
+    { name: 'FAQ', href: '/faq' },
   ]
 
+  const isActive = (href: string) => {
+    if (href === '/') {
+      return pathname === '/'
+    }
+    return pathname.startsWith(href)
+  }
+
+  const router = useRouter()
+  
+  const handleLoginClick = () => {
+    router.push('/auth/signin')
+  }
+  
+  const handleSignUpClick = () => {
+    router.push('/auth/signup')
+  }
+
+  // Function to get the first letter of the user's name
+  const getInitials = (name: string) => {
+    return name.charAt(0).toUpperCase()
+  }
+
   return (
-    <nav className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <nav className="bg-white shadow-sm sticky top-0 z-50">
+      <div className="mx-auto px-8 sm:px-12 lg:px-20">
         <div className="flex justify-between items-center h-16">
           {/* Logo and Title */}
-          <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">CC</span>
-            </div>
-            <h1 className="text-xl font-bold text-gray-900 hidden sm:block">CollabConnect</h1>
-          </div>
+          <Link href="/" className="flex items-center space-x-3">
+            <img 
+              src={Logo.src} 
+              alt="Partnero Logo"
+              className="w-9 h-9 rounded-lg object-cover" 
+            />
+            <h1 className="text-2xl font-bold text-gray-900 hidden sm:block" style={{ fontFamily: 'K2D, sans-serif' }}>Partnero</h1>
+          </Link>
 
           {/* Desktop Navigation Links */}
           <div className="hidden md:flex items-center space-x-8">
             {navLinks.map((link) => (
-              <a
+              <Link
                 key={link.name}
                 href={link.href}
-                className="text-gray-600 hover:text-gray-900 transition-colors duration-200 font-medium"
+                className={`transition-colors duration-200 font-medium ${
+                  isActive(link.href)
+                    ? 'text-[#9A9A4A] border-b-2 border-[#9A9A4A] pb-1'
+                    : 'text-gray-600 hover:text-gray-900'
+                }`} style={{ fontFamily: 'Lato, sans-serif' }}
               >
                 {link.name}
-              </a>
+              </Link>
             ))}
           </div>
 
@@ -66,14 +95,14 @@ export default function Navbar({ isLoggedIn, user, onLogin, onProfileClick, onLo
             {!isLoggedIn ? (
               <div className="flex items-center space-x-3">
                 <button
-                  onClick={onLogin}
+                  onClick={handleLoginClick}
                   className="text-gray-600 hover:text-gray-900 font-medium transition-colors duration-200"
                 >
                   Login
                 </button>
                 <button
-                  onClick={onLogin}
-                  className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200 font-medium"
+                  onClick={handleSignUpClick}
+                  className="bg-[#9A9A4A] text-white px-4 py-2 rounded-lg hover:bg-[#8A8A3A] transition-colors duration-200 font-medium"
                 >
                   Sign Up
                 </button>
@@ -84,11 +113,12 @@ export default function Navbar({ isLoggedIn, user, onLogin, onProfileClick, onLo
                   onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
                   className="flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-100 transition-colors duration-200"
                 >
-                  <img
-                    src={user.avatar}
-                    alt={user.name}
-                    className="w-8 h-8 rounded-full object-cover"
-                  />
+                  {/* User Initial Avatar */}
+                  <div className="w-8 h-8 bg-[#CACA78] rounded-full flex items-center justify-center">
+                    <span className="text-white font-semibold text-sm">
+                      {user ? getInitials(user.name) : 'U'}
+                    </span>
+                  </div>
                   <ChevronDown className="w-4 h-4 text-gray-500" />
                 </button>
 
@@ -96,8 +126,8 @@ export default function Navbar({ isLoggedIn, user, onLogin, onProfileClick, onLo
                 {isProfileDropdownOpen && (
                   <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2">
                     <div className="px-4 py-2 border-b border-gray-100">
-                      <p className="text-sm font-medium text-gray-900">{user.name}</p>
-                      <p className="text-xs text-gray-500">{user.email}</p>
+                      <p className="text-sm font-medium text-gray-900">{user?.name || 'User'}</p>
+                      <p className="text-xs text-gray-500">{user?.email || 'user@example.com'}</p>
                     </div>
                     <button
                       onClick={() => {
@@ -143,14 +173,16 @@ export default function Navbar({ isLoggedIn, user, onLogin, onProfileClick, onLo
           <div className="md:hidden py-4 border-t border-gray-200">
             <div className="flex flex-col space-y-3">
               {navLinks.map((link) => (
-                <a
+                <Link
                   key={link.name}
                   href={link.href}
-                  className="text-gray-600 hover:text-gray-900 py-2 font-medium transition-colors duration-200"
+                  className={`py-2 font-medium transition-colors duration-200 ${
+                    isActive(link.href) ? 'text-[#9A9A4A]' : 'text-gray-600 hover:text-gray-900'
+                  }`}
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {link.name}
-                </a>
+                </Link>
               ))}
             </div>
           </div>

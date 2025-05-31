@@ -1,31 +1,23 @@
-// File path: src/components/BusinessList.tsx
-
 'use client'
 
 import { useState } from 'react'
-import { Search, Filter, Grid, List, MapPin, Star, Users, Instagram, Youtube, MessageCircle, Lock } from 'lucide-react'
+import { Search, Filter, Grid, List, Star, Users } from 'lucide-react'
 import BusinessCard from './BusinessCard'
 import FilterSidebar from './FilterSidebar'
-
-interface Business {
-  id: string
-  name: string
-  description: string
-  category: string
-  location: string
-  rating: number
-  followers: string
-  platforms: string[]
-  image: string
-  isTopRated: boolean
-  isRecent: boolean
-}
+import { 
+  mockBusinesses, 
+  getTopRatedBusinesses, 
+  getRecentBusinesses,
+  type Business 
+} from '@/data/mockBusinesses'
 
 interface BusinessListProps {
   isLoggedIn: boolean
+  onBusinessClick: (businessId: string) => void
+  onEmailBusiness: (businessId: string) => void
 }
 
-export default function BusinessList({ isLoggedIn }: BusinessListProps) {
+export default function BusinessList({ isLoggedIn, onBusinessClick, onEmailBusiness }: BusinessListProps) {
   const [searchTerm, setSearchTerm] = useState('')
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
   const [isFilterOpen, setIsFilterOpen] = useState(false)
@@ -36,75 +28,6 @@ export default function BusinessList({ isLoggedIn }: BusinessListProps) {
     rating: 0
   })
 
-  // Mock data - replace with actual API call
-  const businesses: Business[] = [
-    {
-      id: '1',
-      name: 'Creative Studios',
-      description: 'Digital marketing agency specializing in social media content creation and brand development.',
-      category: 'Digital Marketing',
-      location: 'New York, NY',
-      rating: 4.8,
-      followers: '15K',
-      platforms: ['Instagram', 'YouTube', 'TikTok'],
-      image: '/api/placeholder/300/200',
-      isTopRated: true,
-      isRecent: false
-    },
-    {
-      id: '2',
-      name: 'TechFlow Solutions',
-      description: 'Software development company looking for content creators to showcase our innovative products.',
-      category: 'Technology',
-      location: 'San Francisco, CA',
-      rating: 4.9,
-      followers: '25K',
-      platforms: ['YouTube', 'LinkedIn'],
-      image: '/api/placeholder/300/200',
-      isTopRated: true,
-      isRecent: true
-    },
-    {
-      id: '3',
-      name: 'Wellness Collective',
-      description: 'Health and wellness brand seeking fitness influencers and nutrition content creators.',
-      category: 'Health & Wellness',
-      location: 'Los Angeles, CA',
-      rating: 4.7,
-      followers: '32K',
-      platforms: ['Instagram', 'TikTok', 'Telegram'],
-      image: '/api/placeholder/300/200',
-      isTopRated: false,
-      isRecent: true
-    },
-    {
-      id: '4',
-      name: 'Fashion Forward',
-      description: 'Sustainable fashion brand collaborating with style influencers and eco-conscious creators.',
-      category: 'Fashion',
-      location: 'Miami, FL',
-      rating: 4.6,
-      followers: '18K',
-      platforms: ['Instagram', 'Pinterest'],
-      image: '/api/placeholder/300/200',
-      isTopRated: false,
-      isRecent: false
-    },
-    {
-      id: '5',
-      name: 'Gourmet Kitchen',
-      description: 'Restaurant chain looking for food bloggers and cooking content creators for partnerships.',
-      category: 'Food & Beverage',
-      location: 'Chicago, IL',
-      rating: 4.5,
-      followers: '12K',
-      platforms: ['Instagram', 'YouTube'],
-      image: '/api/placeholder/300/200',
-      isTopRated: false,
-      isRecent: true
-    }
-  ]
-
   const handleSearch = (term: string) => {
     setSearchTerm(term)
   }
@@ -113,7 +36,7 @@ export default function BusinessList({ isLoggedIn }: BusinessListProps) {
     setFilters(newFilters)
   }
 
-  const filteredBusinesses = businesses.filter(business => {
+  const filteredBusinesses = mockBusinesses.filter(business => {
     const matchesSearch = business.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          business.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          business.category.toLowerCase().includes(searchTerm.toLowerCase())
@@ -126,16 +49,16 @@ export default function BusinessList({ isLoggedIn }: BusinessListProps) {
     return matchesSearch && matchesCategory && matchesLocation && matchesPlatform && matchesRating
   })
 
-  const topRatedBusinesses = businesses.filter(b => b.isTopRated).slice(0, 5)
-  const recentBusinesses = businesses.filter(b => b.isRecent).slice(0, 5)
+  const topRatedBusinesses = getTopRatedBusinesses(5)
+  const recentBusinesses = getRecentBusinesses(5)
 
   return (
-    <section id="businesses" className="py-16 bg-white">
+    <section className="py-16 bg-white min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Discover Collaboration Opportunities
+            Discover Partnership Opportunities
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
             Browse through hundreds of businesses and creators looking for partnerships
@@ -145,10 +68,10 @@ export default function BusinessList({ isLoggedIn }: BusinessListProps) {
         {/* Top Widgets */}
         <div className="grid md:grid-cols-2 gap-6 mb-8">
           {/* Top Rated Widget */}
-          <div className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg p-6">
+          <div className="bg-gradient-to-r from-purple-50 to-purple-100 rounded-lg p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
               <Star className="w-5 h-5 text-yellow-500 mr-2" />
-              Top Rated Businesses
+              Top Rated Partners
             </h3>
             <div className="space-y-3">
               {topRatedBusinesses.map(business => (
@@ -189,7 +112,7 @@ export default function BusinessList({ isLoggedIn }: BusinessListProps) {
               placeholder="Search businesses, categories, or locations..."
               value={searchTerm}
               onChange={(e) => handleSearch(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
             />
           </div>
           
@@ -198,13 +121,13 @@ export default function BusinessList({ isLoggedIn }: BusinessListProps) {
             <div className="flex items-center border border-gray-300 rounded-lg p-1">
               <button
                 onClick={() => setViewMode('grid')}
-                className={`p-2 rounded ${viewMode === 'grid' ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-gray-100'}`}
+                className={`p-2 rounded ${viewMode === 'grid' ? 'bg-purple-600 text-white' : 'text-gray-600 hover:bg-gray-100'}`}
               >
                 <Grid className="w-4 h-4" />
               </button>
               <button
                 onClick={() => setViewMode('list')}
-                className={`p-2 rounded ${viewMode === 'list' ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-gray-100'}`}
+                className={`p-2 rounded ${viewMode === 'list' ? 'bg-purple-600 text-white' : 'text-gray-600 hover:bg-gray-100'}`}
               >
                 <List className="w-4 h-4" />
               </button>
@@ -224,7 +147,7 @@ export default function BusinessList({ isLoggedIn }: BusinessListProps) {
         {/* Results Count */}
         <div className="mb-6">
           <p className="text-gray-600">
-            Showing {filteredBusinesses.length} of {businesses.length} businesses
+            Showing {filteredBusinesses.length} of {mockBusinesses.length} businesses
           </p>
         </div>
 
@@ -239,6 +162,8 @@ export default function BusinessList({ isLoggedIn }: BusinessListProps) {
               business={business}
               viewMode={viewMode}
               isLoggedIn={isLoggedIn}
+              onBusinessClick={onBusinessClick}
+              onEmailBusiness={onEmailBusiness}
             />
           ))}
         </div>

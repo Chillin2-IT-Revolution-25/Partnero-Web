@@ -1,9 +1,8 @@
-// File path: src/components/FilterSidebar.tsx
-
 'use client'
 
 import { useState, useEffect } from 'react'
 import { X, Star, MapPin, Tag, Users, Instagram, Youtube } from 'lucide-react'
+import { categories, locations, additionalCollaborationTypes } from '@/data/mockFormData'
 
 interface Filters {
   category: string
@@ -26,34 +25,38 @@ export default function FilterSidebar({ isOpen, onClose, filters, onFilterChange
     setLocalFilters(filters)
   }, [filters])
 
-  const categories = [
-    'All Categories',
-    'Digital Marketing',
-    'Technology',
-    'Health & Wellness',
-    'Fashion',
-    'Food & Beverage',
-    'Education',
-    'Entertainment',
-    'Finance',
-    'Travel',
-    'Real Estate',
-    'Beauty & Cosmetics'
-  ]
+  // Prevent body scroll when sidebar is open
+  useEffect(() => {
+    if (isOpen) {
+      // Store current scroll position
+      const scrollY = window.scrollY
+      document.body.style.position = 'fixed'
+      document.body.style.top = `-${scrollY}px`
+      document.body.style.width = '100%'
+      document.body.style.overflow = 'hidden'
+    } else {
+      // Restore scroll position
+      const scrollY = document.body.style.top
+      document.body.style.position = ''
+      document.body.style.top = ''
+      document.body.style.width = ''
+      document.body.style.overflow = ''
+      if (scrollY) {
+        window.scrollTo(0, parseInt(scrollY || '0') * -1)
+      }
+    }
 
-  const locations = [
-    'All Locations',
-    'New York, NY',
-    'Los Angeles, CA',
-    'San Francisco, CA',
-    'Chicago, IL',
-    'Miami, FL',
-    'Austin, TX',
-    'Seattle, WA',
-    'Boston, MA',
-    'Denver, CO',
-    'Atlanta, GA'
-  ]
+    // Cleanup function to ensure styles are reset
+    return () => {
+      document.body.style.position = ''
+      document.body.style.top = ''
+      document.body.style.width = ''
+      document.body.style.overflow = ''
+    }
+  }, [isOpen])
+
+  const allCategories = ['All Categories', ...categories]
+  const allLocations = locations
 
   const platforms = [
     { name: 'All Platforms', value: '' },
@@ -100,17 +103,17 @@ export default function FilterSidebar({ isOpen, onClose, filters, onFilterChange
       {/* Backdrop */}
       {isOpen && (
         <div 
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity duration-300"
+          className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 transition-opacity duration-300"
           onClick={onClose}
         />
       )}
 
       {/* Sidebar */}
-      <div className={`fixed top-0 right-0 h-full w-80 bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-in-out ${
+      <div className={`fixed top-16 right-0 h-[calc(100vh-4rem)] w-full sm:w-96 bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-in-out ${
         isOpen ? 'translate-x-0' : 'translate-x-full'
       }`}>
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200">
+        <div className="flex items-center justify-between p-4 border-b border-gray-200">
           <h2 className="text-xl font-semibold text-gray-900">Filters</h2>
           <button
             onClick={onClose}
@@ -121,7 +124,7 @@ export default function FilterSidebar({ isOpen, onClose, filters, onFilterChange
         </div>
 
         {/* Filter Content */}
-        <div className="p-6 space-y-6 overflow-y-auto h-full pb-32">
+        <div className="p-6 space-y-6 overflow-y-auto h-full pb-48">
           {/* Category Filter */}
           <div>
             <label className="flex items-center text-sm font-medium text-gray-900 mb-3">
@@ -131,9 +134,9 @@ export default function FilterSidebar({ isOpen, onClose, filters, onFilterChange
             <select
               value={localFilters.category}
               onChange={(e) => handleFilterChange('category', e.target.value === 'All Categories' ? '' : e.target.value)}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
             >
-              {categories.map(category => (
+              {allCategories.map(category => (
                 <option key={category} value={category}>
                   {category}
                 </option>
@@ -150,9 +153,9 @@ export default function FilterSidebar({ isOpen, onClose, filters, onFilterChange
             <select
               value={localFilters.location}
               onChange={(e) => handleFilterChange('location', e.target.value === 'All Locations' ? '' : e.target.value)}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
             >
-              {locations.map(location => (
+              {allLocations.map(location => (
                 <option key={location} value={location}>
                   {location}
                 </option>
@@ -179,7 +182,7 @@ export default function FilterSidebar({ isOpen, onClose, filters, onFilterChange
                   />
                   <div className={`flex items-center w-full p-3 border rounded-lg transition-colors duration-200 ${
                     localFilters.platform === platform.value 
-                      ? 'border-blue-500 bg-blue-50' 
+                      ? 'border-purple-500 bg-purple-50' 
                       : 'border-gray-300 hover:bg-gray-50'
                   }`}>
                     {platform.icon && <div className="mr-3">{platform.icon}</div>}
@@ -209,7 +212,7 @@ export default function FilterSidebar({ isOpen, onClose, filters, onFilterChange
                   />
                   <div className={`flex items-center w-full p-3 border rounded-lg transition-colors duration-200 ${
                     localFilters.rating === rating 
-                      ? 'border-blue-500 bg-blue-50' 
+                      ? 'border-purple-500 bg-purple-50' 
                       : 'border-gray-300 hover:bg-gray-50'
                   }`}>
                     <div className="flex items-center mr-3">
@@ -231,19 +234,11 @@ export default function FilterSidebar({ isOpen, onClose, filters, onFilterChange
               Collaboration Type
             </label>
             <div className="grid grid-cols-1 gap-2">
-              {[
-                'Sponsorship',
-                'Product Review',
-                'Content Creation',
-                'Brand Ambassador',
-                'Event Collaboration',
-                'Affiliate Marketing',
-                'Giveaway/Contest'
-              ].map(type => (
+              {additionalCollaborationTypes.map(type => (
                 <label key={type} className="flex items-center">
                   <input
                     type="checkbox"
-                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-500 mr-3"
+                    className="rounded border-gray-300 text-purple-600 focus:ring-purple-500 mr-3"
                   />
                   <span className="text-sm text-gray-700">{type}</span>
                 </label>
@@ -253,7 +248,7 @@ export default function FilterSidebar({ isOpen, onClose, filters, onFilterChange
         </div>
 
         {/* Footer Actions */}
-        <div className="absolute bottom-0 left-0 right-0 p-6 bg-white border-t border-gray-200">
+        <div className="absolute bottom-[-15px] left-0 right-0 p-6 bg-white border-t border-gray-200">
           <div className="flex space-x-3">
             <button
               onClick={handleClearFilters}
@@ -263,7 +258,7 @@ export default function FilterSidebar({ isOpen, onClose, filters, onFilterChange
             </button>
             <button
               onClick={handleApplyFilters}
-              className="flex-1 px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 font-medium"
+              className="flex-1 px-4 py-3 bg-[#9A9A4A] text-white rounded-lg hover:bg-[#8A8A3A] transition-colors duration-200 font-medium"
             >
               Apply Filters
             </button>
