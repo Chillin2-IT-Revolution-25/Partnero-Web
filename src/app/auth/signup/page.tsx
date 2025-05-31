@@ -18,7 +18,7 @@ export default function SignUpPage() {
     confirmPassword: '',
     // Business Info
     businessName: '',
-    businessType: 'creator',
+    businessType: 'business', // Always set to business
     category: '',
     description: '',
     // Preferences
@@ -95,7 +95,7 @@ export default function SignUpPage() {
     const newErrors: Record<string, string> = {}
 
     if (!formData.businessName.trim()) {
-      newErrors.businessName = 'Business/Creator name is required'
+      newErrors.businessName = 'Business name is required'
     }
 
     if (!formData.category) {
@@ -383,49 +383,7 @@ export default function SignUpPage() {
               <div className="space-y-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Account Type
-                  </label>
-                  <div className="grid grid-cols-2 gap-4">
-                    <button
-                      type="button"
-                      onClick={() => handleInputChange('businessType', 'creator')}
-                      className={`p-4 border rounded-lg text-left transition-colors duration-200 ${
-                        formData.businessType === 'creator'
-                          ? 'border-[#9A9A4A] bg-[#CACA78]/10'
-                          : 'border-gray-300 hover:bg-gray-50'
-                      }`}
-                    >
-                      <div className="flex items-center">
-                        <User className="w-5 h-5 text-[#9A9A4A] mr-2" />
-                        <span className="font-medium">Content Creator</span>
-                      </div>
-                      <p className="text-sm text-gray-600 mt-1">
-                        Influencer, blogger, or individual creator
-                      </p>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => handleInputChange('businessType', 'business')}
-                      className={`p-4 border rounded-lg text-left transition-colors duration-200 ${
-                        formData.businessType === 'business'
-                          ? 'border-[#9A9A4A] bg-[#CACA78]/10'
-                          : 'border-gray-300 hover:bg-gray-50'
-                      }`}
-                    >
-                      <div className="flex items-center">
-                        <Building className="w-5 h-5 text-[#9A9A4A] mr-2" />
-                        <span className="font-medium">Business</span>
-                      </div>
-                      <p className="text-sm text-gray-600 mt-1">
-                        Company or organization
-                      </p>
-                    </button>
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    {formData.businessType === 'creator' ? 'Creator Name' : 'Business Name'}
+                    Business Name
                   </label>
                   <div className="relative">
                     <Building className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#9A9A4A] w-5 h-5" />
@@ -436,7 +394,7 @@ export default function SignUpPage() {
                       className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#CACA78] focus:border-transparent ${
                         errors.businessName ? 'border-red-500' : 'border-gray-300'
                       }`}
-                      placeholder={formData.businessType === 'creator' ? 'Your creator name or brand' : 'Your business name'}
+                      placeholder="Your business name"
                     />
                   </div>
                   {errors.businessName && <p className="text-red-500 text-xs mt-1">{errors.businessName}</p>}
@@ -472,7 +430,7 @@ export default function SignUpPage() {
                     className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#CACA78] focus:border-transparent resize-none ${
                       errors.description ? 'border-red-500' : 'border-gray-300'
                     }`}
-                    placeholder="Tell us about yourself and what you do. What kind of partnerships are you looking for?"
+                    placeholder="Tell us about your business and what you do. What kind of partnerships are you looking for?"
                   />
                   <div className="flex justify-between items-center mt-1">
                     {errors.description && <p className="text-red-500 text-xs">{errors.description}</p>}
@@ -498,10 +456,10 @@ export default function SignUpPage() {
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-600">Account Type:</span>
-                      <span className="font-medium capitalize">{formData.businessType}</span>
+                      <span className="font-medium">Business</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-600">{formData.businessType === 'creator' ? 'Creator Name:' : 'Business Name:'}</span>
+                      <span className="text-gray-600">Business Name:</span>
                       <span className="font-medium">{formData.businessName}</span>
                     </div>
                     <div className="flex justify-between">
@@ -597,13 +555,6 @@ export default function SignUpPage() {
               </Link>
             </p>
           </div>
-        </div>
-
-        {/* Footer */}
-        <div className="text-center mt-8">
-          <p className="text-gray-500 text-sm">
-            Join thousands of creators and businesses building meaningful partnerships
-          </p>
         </div>
       </div>
     </div>

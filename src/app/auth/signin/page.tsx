@@ -92,13 +92,6 @@ export default function SignInPage() {
     }
   }
 
-  const handleDemoLogin = () => {
-    setFormData({
-      email: 'demo@partnero.com',
-      password: 'password'
-    })
-  }
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#CACA78]/10 via-[#CACA78]/5 to-[#9A9A4A]/15 flex items-center justify-center p-4 relative overflow-hidden">
       {/* Add Google Fonts */}
@@ -131,34 +124,6 @@ export default function SignInPage() {
           <div className="text-center mb-6">
             <h1 className="text-2xl font-bold text-gray-900 mb-2">Sign In</h1>
             <p className="text-gray-600">Enter your credentials to access your account</p>
-          </div>
-
-          {/* Demo Credentials Banner */}
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-            <div className="flex items-start">
-              <div className="flex-shrink-0">
-                <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center">
-                  <span className="text-white text-xs font-bold">!</span>
-                </div>
-              </div>
-              <div className="ml-3 flex-1">
-                <h3 className="text-sm font-medium text-blue-800">Demo Account</h3>
-                <p className="text-sm text-blue-700 mt-1">
-                  Use these credentials to test the platform:
-                </p>
-                <div className="mt-2 text-xs text-blue-600 font-mono bg-blue-100 p-2 rounded">
-                  Email: demo@partnero.com<br />
-                  Password: password
-                </div>
-                <button
-                  type="button"
-                  onClick={handleDemoLogin}
-                  className="mt-2 text-xs text-blue-600 hover:text-blue-700 font-medium underline"
-                >
-                  Click to auto-fill
-                </button>
-              </div>
-            </div>
           </div>
 
           {/* Error Message */}
