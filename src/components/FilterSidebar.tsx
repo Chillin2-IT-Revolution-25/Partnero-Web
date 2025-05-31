@@ -258,7 +258,7 @@ export default function FilterSidebar({ isOpen, onClose, filters, onFilterChange
             </button>
             <button
               onClick={handleApplyFilters}
-              className="flex-1 px-4 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors duration-200 font-medium"
+              className="flex-1 px-4 py-3 bg-[#9A9A4A] text-white rounded-lg hover:bg-[#8A8A3A] transition-colors duration-200 font-medium"
             >
               Apply Filters
             </button>
