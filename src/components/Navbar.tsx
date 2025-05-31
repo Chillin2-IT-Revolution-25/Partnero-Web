@@ -96,13 +96,13 @@ export default function Navbar({ isLoggedIn, user, onProfileClick, onLogout, onB
               <div className="flex items-center space-x-3">
                 <button
                   onClick={handleLoginClick}
-                  className="text-gray-600 hover:text-gray-900 font-medium transition-colors duration-200"
+                  className="text-gray-600 hover:text-gray-900 font-medium transition-colors duration-200 cursor-pointer"
                 >
                   Login
                 </button>
                 <button
                   onClick={handleSignUpClick}
-                  className="bg-[#9A9A4A] text-white px-4 py-2 rounded-lg hover:bg-[#8A8A3A] transition-colors duration-200 font-medium"
+                  className="bg-[#9A9A4A] text-white px-4 py-2 rounded-lg hover:bg-[#8A8A3A] transition-colors duration-200 font-medium cursor-pointer"
                 >
                   Sign Up
                 </button>
@@ -111,7 +111,7 @@ export default function Navbar({ isLoggedIn, user, onProfileClick, onLogout, onB
               <div className="relative">
                 <button
                   onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
-                  className="flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-100 transition-colors duration-200"
+                  className="flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-100 transition-colors duration-200 cursor-pointer"
                 >
                   {/* User Initial Avatar */}
                   <div className="w-8 h-8 bg-[#CACA78] rounded-full flex items-center justify-center">
