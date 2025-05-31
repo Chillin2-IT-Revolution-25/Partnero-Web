@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter, usePathname } from 'next/navigation' // Updated import
 import { Menu, X, Settings, LogOut, ChevronDown } from 'lucide-react'
+import Logo from '../assets/logo/Logo.svg'
 
 interface User {
   name: string
@@ -34,8 +35,7 @@ export default function Navbar({ isLoggedIn, user, onLogin, onProfileClick, onLo
   const navLinks = [
     { name: 'Home', href: '/' },
     { name: 'Browse', href: '/browse' },
-    { name: 'About', href: '/about' },
-    { name: 'Contact', href: '/contact' }
+    { name: 'FAQ', href: '/faq' },
   ]
 
   const isActive = (href: string) => {
@@ -57,15 +57,17 @@ export default function Navbar({ isLoggedIn, user, onLogin, onProfileClick, onLo
   }
 
   return (
-    <nav className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <nav className="bg-white shadow-sm sticky top-0 z-50">
+      <div className="mx-auto px-8 sm:px-12 lg:px-20">
         <div className="flex justify-between items-center h-16">
           {/* Logo and Title */}
           <Link href="/" className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">P</span>
-            </div>
-            <h1 className="text-xl font-bold text-gray-900 hidden sm:block">Partnero</h1>
+            <img 
+              src={Logo.src} 
+              alt="Partnero Logo"
+              className="w-9 h-9 rounded-lg object-cover" 
+            />
+            <h1 className="text-2xl font-bold text-gray-900 hidden sm:block" style={{ fontFamily: 'K2D, sans-serif' }}>Partnero</h1>
           </Link>
 
           {/* Desktop Navigation Links */}
@@ -78,7 +80,7 @@ export default function Navbar({ isLoggedIn, user, onLogin, onProfileClick, onLo
                   isActive(link.href)
                     ? 'text-purple-600 border-b-2 border-purple-600 pb-1'
                     : 'text-gray-600 hover:text-gray-900'
-                }`}
+                }`} style={{ fontFamily: 'Lato, sans-serif' }}
               >
                 {link.name}
               </Link>

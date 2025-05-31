@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import Navbar from '@/components/Navbar'
 import HeroSection from '@/components/HeroSection'
 import ProfileModal from '@/components/ProfileModal'
+import Footer from '@/components/Footer'
 
 export default function HomePage() {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
@@ -71,6 +72,8 @@ export default function HomePage() {
       />
       
       <HeroSection onBrowseClick={handleSignUpclick} />
+
+      <Footer />
       
       {showProfileModal && (
         <ProfileModal 
