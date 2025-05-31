@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { useRouter, usePathname } from 'next/navigation' // Updated import
+import { useRouter, usePathname } from 'next/navigation'
 import { Menu, X, Settings, LogOut, ChevronDown } from 'lucide-react'
 import Logo from '../assets/logo/Logo.svg'
 
@@ -45,8 +45,7 @@ export default function Navbar({ isLoggedIn, user, onLogin, onProfileClick, onLo
     return pathname.startsWith(href)
   }
 
-  // Add these new handlers
-  const router = useRouter() // Add this import at the top
+  const router = useRouter()
   
   const handleLoginClick = () => {
     router.push('/auth/signin')
@@ -54,6 +53,11 @@ export default function Navbar({ isLoggedIn, user, onLogin, onProfileClick, onLo
   
   const handleSignUpClick = () => {
     router.push('/auth/signup')
+  }
+
+  // Function to get the first letter of the user's name
+  const getInitials = (name: string) => {
+    return name.charAt(0).toUpperCase()
   }
 
   return (
@@ -78,7 +82,7 @@ export default function Navbar({ isLoggedIn, user, onLogin, onProfileClick, onLo
                 href={link.href}
                 className={`transition-colors duration-200 font-medium ${
                   isActive(link.href)
-                    ? 'text-purple-600 border-b-2 border-purple-600 pb-1'
+                    ? 'text-[#9A9A4A] border-b-2 border-[#9A9A4A] pb-1'
                     : 'text-gray-600 hover:text-gray-900'
                 }`} style={{ fontFamily: 'Lato, sans-serif' }}
               >
@@ -92,14 +96,14 @@ export default function Navbar({ isLoggedIn, user, onLogin, onProfileClick, onLo
             {!isLoggedIn ? (
               <div className="flex items-center space-x-3">
                 <button
-                  onClick={handleLoginClick} // Changed from onLogin
+                  onClick={handleLoginClick}
                   className="text-gray-600 hover:text-gray-900 font-medium transition-colors duration-200"
                 >
                   Login
                 </button>
                 <button
-                  onClick={handleSignUpClick} // Changed from onLogin
-                  className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors duration-200 font-medium"
+                  onClick={handleSignUpClick}
+                  className="bg-[#9A9A4A] text-white px-4 py-2 rounded-lg hover:bg-[#8A8A3A] transition-colors duration-200 font-medium"
                 >
                   Sign Up
                 </button>
@@ -110,11 +114,12 @@ export default function Navbar({ isLoggedIn, user, onLogin, onProfileClick, onLo
                   onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
                   className="flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-100 transition-colors duration-200"
                 >
-                  <img
-                    src={user.avatar}
-                    alt={user.name}
-                    className="w-8 h-8 rounded-full object-cover"
-                  />
+                  {/* User Initial Avatar */}
+                  <div className="w-8 h-8 bg-[#CACA78] rounded-full flex items-center justify-center">
+                    <span className="text-white font-semibold text-sm">
+                      {getInitials(user.name)}
+                    </span>
+                  </div>
                   <ChevronDown className="w-4 h-4 text-gray-500" />
                 </button>
 
@@ -173,7 +178,7 @@ export default function Navbar({ isLoggedIn, user, onLogin, onProfileClick, onLo
                   key={link.name}
                   href={link.href}
                   className={`py-2 font-medium transition-colors duration-200 ${
-                    isActive(link.href) ? 'text-purple-600' : 'text-gray-600 hover:text-gray-900'
+                    isActive(link.href) ? 'text-[#9A9A4A]' : 'text-gray-600 hover:text-gray-900'
                   }`}
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
