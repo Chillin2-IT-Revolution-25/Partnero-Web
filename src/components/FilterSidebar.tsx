@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { X, Star, MapPin, Tag, Users, Instagram, Youtube } from 'lucide-react'
+import { categories, locations, additionalCollaborationTypes } from '@/data/mockFormData'
 
 interface Filters {
   category: string
@@ -24,34 +25,8 @@ export default function FilterSidebar({ isOpen, onClose, filters, onFilterChange
     setLocalFilters(filters)
   }, [filters])
 
-  const categories = [
-    'All Categories',
-    'Digital Marketing',
-    'Technology',
-    'Health & Wellness',
-    'Fashion',
-    'Food & Beverage',
-    'Education',
-    'Entertainment',
-    'Finance',
-    'Travel',
-    'Real Estate',
-    'Beauty & Cosmetics'
-  ]
-
-  const locations = [
-    'All Locations',
-    'New York, NY',
-    'Los Angeles, CA',
-    'San Francisco, CA',
-    'Chicago, IL',
-    'Miami, FL',
-    'Austin, TX',
-    'Seattle, WA',
-    'Boston, MA',
-    'Denver, CO',
-    'Atlanta, GA'
-  ]
+  const allCategories = ['All Categories', ...categories]
+  const allLocations = locations
 
   const platforms = [
     { name: 'All Platforms', value: '' },
@@ -131,7 +106,7 @@ export default function FilterSidebar({ isOpen, onClose, filters, onFilterChange
               onChange={(e) => handleFilterChange('category', e.target.value === 'All Categories' ? '' : e.target.value)}
               className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
             >
-              {categories.map(category => (
+              {allCategories.map(category => (
                 <option key={category} value={category}>
                   {category}
                 </option>
@@ -150,7 +125,7 @@ export default function FilterSidebar({ isOpen, onClose, filters, onFilterChange
               onChange={(e) => handleFilterChange('location', e.target.value === 'All Locations' ? '' : e.target.value)}
               className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
             >
-              {locations.map(location => (
+              {allLocations.map(location => (
                 <option key={location} value={location}>
                   {location}
                 </option>
@@ -229,15 +204,7 @@ export default function FilterSidebar({ isOpen, onClose, filters, onFilterChange
               Collaboration Type
             </label>
             <div className="grid grid-cols-1 gap-2">
-              {[
-                'Sponsorship',
-                'Product Review',
-                'Content Creation',
-                'Brand Ambassador',
-                'Event Collaboration',
-                'Affiliate Marketing',
-                'Giveaway/Contest'
-              ].map(type => (
+              {additionalCollaborationTypes.map(type => (
                 <label key={type} className="flex items-center">
                   <input
                     type="checkbox"

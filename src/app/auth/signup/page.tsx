@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { Eye, EyeOff, Mail, Lock, User, Building, ArrowRight, AlertCircle, Check } from 'lucide-react'
 import Logo from '../../../assets/logo/Logo.svg'
 import { useAuth } from '@/contexts/AuthContext'
+import { categories } from '@/data/mockFormData'
 
 export default function SignUpPage() {
   const router = useRouter()
@@ -31,20 +32,6 @@ export default function SignUpPage() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [errors, setErrors] = useState<Record<string, string>>({})
-
-  const categories = [
-    'Digital Marketing',
-    'Technology',
-    'Health & Wellness',
-    'Fashion',
-    'Food & Beverage',
-    'Education',
-    'Entertainment',
-    'Finance',
-    'Travel',
-    'Real Estate',
-    'Beauty & Cosmetics'
-  ]
 
   const handleInputChange = (field: string, value: string | boolean) => {
     setFormData(prev => ({

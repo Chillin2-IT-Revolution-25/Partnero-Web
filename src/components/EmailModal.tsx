@@ -2,6 +2,13 @@
 
 import { useState } from 'react'
 import { X, Send, User, Mail, MessageSquare, Paperclip, CheckCircle, AlertCircle } from 'lucide-react'
+import { 
+  collaborationTypes, 
+  subjectTemplates, 
+  budgetRanges, 
+  partnershipTips 
+} from '@/data/mockFormData'
+import { getBusinessById } from '@/data/mockBusinesses'
 
 interface EmailModalProps {
   businessId: string
@@ -23,29 +30,11 @@ export default function EmailModal({ businessId, onClose, isLoggedIn }: EmailMod
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [errors, setErrors] = useState<Record<string, string>>({})
 
-  // Mock business data - in real app, fetch by businessId
-  const business = {
+  // Get business data using the helper function
+  const business = getBusinessById(businessId) || {
     name: 'Creative Studios',
     email: 'hello@creativestudios.com'
   }
-
-  const collaborationTypes = [
-    'Sponsored Content',
-    'Product Review',
-    'Brand Ambassador',
-    'Long-term Partnership',
-    'Event Coverage',
-    'Content Creation',
-    'Other'
-  ]
-
-  const subjectTemplates = [
-    'Partnership Inquiry - [Your Name/Brand]',
-    'Collaboration Proposal for [Campaign/Project]',
-    'Content Creator Partnership Request',
-    'Brand Ambassador Application',
-    'Custom Collaboration Opportunity'
-  ]
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({
@@ -311,14 +300,9 @@ export default function EmailModal({ businessId, onClose, isLoggedIn }: EmailMod
                   onChange={(e) => handleInputChange('budget', e.target.value)}
                   className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                 >
-                  <option value="">Select budget range</option>
-                  <option value="under-500">Under $500</option>
-                  <option value="500-1000">$500 - $1,000</option>
-                  <option value="1000-2500">$1,000 - $2,500</option>
-                  <option value="2500-5000">$2,500 - $5,000</option>
-                  <option value="5000-10000">$5,000 - $10,000</option>
-                  <option value="over-10000">Over $10,000</option>
-                  <option value="negotiable">Negotiable</option>
+                  {budgetRanges.map(range => (
+                    <option key={range.value} value={range.value}>{range.label}</option>
+                  ))}
                 </select>
               </div>
 
@@ -347,11 +331,9 @@ export default function EmailModal({ businessId, onClose, isLoggedIn }: EmailMod
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                 <h4 className="text-sm font-medium text-blue-900 mb-2">💡 Tips for a great partnership inquiry:</h4>
                 <ul className="text-sm text-blue-800 space-y-1">
-                  <li>• Be specific about what type of collaboration you're proposing</li>
-                  <li>• Include your audience demographics and engagement rates</li>
-                  <li>• Mention previous brand collaborations or relevant experience</li>
-                  <li>• Explain why you're interested in their specific brand</li>
-                  <li>• Be professional but let your personality shine through</li>
+                  {partnershipTips.map((tip, index) => (
+                    <li key={index}>• {tip}</li>
+                  ))}
                 </ul>
               </div>
 

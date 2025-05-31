@@ -2,20 +2,7 @@
 
 import { useState } from 'react'
 import { MapPin, Star, Users, MessageCircle, Lock, Instagram, Youtube, Heart, Share2, Mail } from 'lucide-react'
-
-interface Business {
-  id: string
-  name: string
-  description: string
-  category: string
-  location: string
-  rating: number
-  followers: string
-  platforms: string[]
-  image: string
-  isTopRated: boolean
-  isRecent: boolean
-}
+import { type Business } from '@/data/mockBusinesses'
 
 interface BusinessCardProps {
   business: Business

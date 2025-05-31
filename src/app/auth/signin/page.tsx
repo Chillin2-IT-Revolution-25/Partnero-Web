@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { Eye, EyeOff, Mail, Lock, ArrowRight, AlertCircle } from 'lucide-react'
 import Logo from '../../../assets/logo/Logo.svg'
 import { useAuth } from '@/contexts/AuthContext'
+import { demoCredentials, validateCredentials } from '@/data/mockUsers'
 
 export default function SignInPage() {
   const router = useRouter()
@@ -64,20 +65,10 @@ export default function SignInPage() {
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1500))
       
-      // Mock authentication - in real app, validate credentials
-      if (formData.email === 'demo@partnero.com' && formData.password === 'password') {
-        const userData = {
-          name: 'John Doe',
-          email: formData.email,
-          avatar: '/api/placeholder/40/40',
-          business: {
-            name: 'Creative Solutions',
-            description: 'Digital marketing and content creation services',
-            location: 'New York, NY',
-            category: 'Digital Marketing'
-          }
-        }
-        
+      // Validate credentials using the mock data
+      const userData = validateCredentials(formData.email, formData.password)
+      
+      if (userData) {
         // Use the login function from context
         login(userData)
         
@@ -128,13 +119,13 @@ export default function SignInPage() {
           </div>
 
           {/* Demo Credentials Notice */}
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+          {/* <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
             <div className="text-center">
               <p className="text-blue-800 text-sm font-medium mb-1">Demo Credentials</p>
-              <p className="text-blue-700 text-xs">Email: demo@partnero.com</p>
-              <p className="text-blue-700 text-xs">Password: password</p>
+              <p className="text-blue-700 text-xs">Email: {demoCredentials.email}</p>
+              <p className="text-blue-700 text-xs">Password: {demoCredentials.password}</p>
             </div>
-          </div>
+          </div> */}
 
           {/* Error Message */}
           {errors.general && (
