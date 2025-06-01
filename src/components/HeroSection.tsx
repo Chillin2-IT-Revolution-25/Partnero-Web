@@ -28,13 +28,15 @@ export default function HeroSection({ onBrowseClick }: HeroSectionProps) {
               maxHeight: 'min(50vh, 400px)',
               transform: 'translateY(-10%)'
             }}
+            data-aos="fade-up"
+            data-aos-delay="300"
           />
         </div>
 
         <div className="max-w-[95%] mx-auto px-4 sm:px-8 md:px-12 lg:px-16 relative z-10">
           <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 items-center">
             {/* Left Content */}
-            <div className="space-y-6 sm:space-y-8 lg:space-y-10 text-center lg:text-left">
+            <div className="space-y-6 sm:space-y-8 lg:space-y-10 text-center lg:text-left" data-aos="fade-right">
               {/* Main Headline */}
                 <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-9xl font-black leading-none" style={{ fontFamily: 'Kanit, sans-serif' }}>
                   <span className="text-black">SEARCH FOR</span>
@@ -52,6 +54,8 @@ export default function HeroSection({ onBrowseClick }: HeroSectionProps) {
                   onClick={handleGetStarted}
                   className="bg-black text-white px-6 sm:px-8 lg:px-9 py-4 sm:py-4 lg:py-5 rounded-full font-medium text-base sm:text-lg hover:bg-gray-800 transition-colors duration-200"
                   style={{ fontFamily: 'Lato, sans-serif' }}
+                  data-aos="fade-up"
+                  data-aos-delay="200"
                 >
                   GET STARTED
                 </button>
@@ -59,7 +63,7 @@ export default function HeroSection({ onBrowseClick }: HeroSectionProps) {
             </div>
 
             {/* Right Image */}
-            <div className="relative order-first lg:order-last">
+            <div className="relative order-first lg:order-last" data-aos="fade-left" data-aos-delay="100">
               <div className="rounded-[30px] sm:rounded-[40px] lg:rounded-[60px] overflow-hidden shadow-lg">
                 <img
                   src={HeroImg.src}
@@ -74,7 +78,7 @@ export default function HeroSection({ onBrowseClick }: HeroSectionProps) {
           <div className='mt-10 sm:mt-14 lg:mt-18'>
             <div className="flex flex-col lg:flex-row gap-6 lg:gap-0">
               {/* Left Column */}
-                <div className="w-full lg:w-[40%] order-2 lg:order-1">
+                <div className="w-full lg:w-[40%] order-2 lg:order-1" data-aos="fade-up">
                   <p className="text-gray-700 leading-relaxed text-center lg:text-left text-base sm:text-lg lg:text-xl mt-0 lg:mt-3" style={{ fontFamily: 'Lato, sans-serif' }}>
                     Our website allows you to promote your business and
                     collaborate with other businesses that pursue common
@@ -86,7 +90,7 @@ export default function HeroSection({ onBrowseClick }: HeroSectionProps) {
                 </div>
 
               {/* Right Column */}
-                <div className="w-full lg:w-[60%] order-1 lg:order-2">
+                <div className="w-full lg:w-[60%] order-1 lg:order-2" data-aos="fade-up" data-aos-delay="100">
                   <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-normal leading-tight text-center lg:text-right" style={{ fontFamily: 'K2D, sans-serif' }}>
                     <span className="text-black">CHOOSE YOUR PARTNER</span> <br />
                     <span style={{ color: '#CACA78' }}>OR</span>

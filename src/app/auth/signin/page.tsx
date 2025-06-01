@@ -1,12 +1,13 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Eye, EyeOff, Mail, Lock, ArrowRight, AlertCircle } from 'lucide-react'
 import Logo from '../../../assets/logo/Logo.svg'
 import { useAuth } from '@/contexts/AuthContext'
 import { demoCredentials, validateCredentials } from '@/data/mockUsers'
+import { initAOS, refreshAOS } from '@/utils/aosUtils'
 
 export default function SignInPage() {
   const router = useRouter()
@@ -19,6 +20,14 @@ export default function SignInPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [errors, setErrors] = useState<Record<string, string>>({})
 
+  // Initialize AOS when component mounts
+  useEffect(() => {
+    initAOS()
+    return () => {
+      // Clean up or refresh if needed when component unmounts
+    }
+  }, [])
+  
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({
       ...prev,
@@ -99,7 +108,7 @@ export default function SignInPage() {
 
       <div className="relative w-full max-w-md">
         {/* Logo */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-8" data-aos="fade-down" data-aos-duration="500">
           <Link href="/" className="inline-flex items-center space-x-3">
             <img 
               src={Logo.src}
@@ -112,7 +121,7 @@ export default function SignInPage() {
         </div>
 
         {/* Sign In Form */}
-        <div className="bg-white rounded-2xl shadow-xl p-8">
+        <div className="bg-white rounded-2xl shadow-xl p-8" data-aos="fade-up" data-aos-duration="600" data-aos-delay="200">
           <div className="text-center mb-6">
             <h1 className="text-2xl font-bold text-gray-900 mb-2">Sign In</h1>
             <p className="text-gray-600">Enter your credentials to access your account</p>
@@ -139,7 +148,7 @@ export default function SignInPage() {
 
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Email Field */}
-            <div>
+            <div data-aos="fade-up" data-aos-duration="400" data-aos-delay="300">
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Email Address
               </label>
@@ -159,7 +168,7 @@ export default function SignInPage() {
             </div>
 
             {/* Password Field */}
-            <div>
+            <div data-aos="fade-up" data-aos-duration="400" data-aos-delay="400">
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Password
               </label>
@@ -186,7 +195,7 @@ export default function SignInPage() {
             </div>
 
             {/* Remember Me & Forgot Password */}
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between" data-aos="fade-up" data-aos-duration="400" data-aos-delay="500">
               <label className="flex items-center">
                 <input
                   type="checkbox"
@@ -204,6 +213,7 @@ export default function SignInPage() {
               type="submit"
               disabled={isLoading}
               className="w-full bg-black text-white py-3 px-4 rounded-lg hover:bg-gray-800 transition-colors duration-200 font-medium flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+              data-aos="fade-up" data-aos-duration="400" data-aos-delay="600"
             >
               {isLoading ? (
                 <>
@@ -220,7 +230,7 @@ export default function SignInPage() {
           </form>
 
           {/* Social Login Options */}
-          <div className="mt-6">
+          <div className="mt-6" data-aos="fade-up" data-aos-duration="400" data-aos-delay="700">
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t border-gray-300" />
@@ -251,7 +261,7 @@ export default function SignInPage() {
           </div>
 
           {/* Sign Up Link */}
-          <div className="mt-8 text-center">
+          <div className="mt-8 text-center" data-aos="fade-up" data-aos-duration="400" data-aos-delay="800">
             <p className="text-gray-600">
               Don't have an account?{' '}
               <Link href="/auth/signup" className="text-[#9A9A4A] hover:text-[#8A8A3A] font-medium">
@@ -262,7 +272,7 @@ export default function SignInPage() {
         </div>
 
         {/* Footer */}
-        <div className="text-center mt-8">
+        <div className="text-center mt-8" data-aos="fade-up" data-aos-duration="400" data-aos-delay="900">
           <p className="text-gray-500 text-sm">
             By signing in, you agree to our{' '}
             <Link href="/terms" className="text-[#9A9A4A] hover:text-[#8A8A3A]">Terms of Service</Link>

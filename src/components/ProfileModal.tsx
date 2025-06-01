@@ -114,11 +114,15 @@ export default function ProfileModal({ user, onClose, onLogout }: ProfileModalPr
       <div 
         className="fixed inset-0 bg-black/20 backdrop-blur-sm z-50 flex items-center justify-center p-4"
         onClick={onClose}
+        data-aos="fade"
+        data-aos-duration="300"
       >
         {/* Modal */}
         <div 
           className="bg-white rounded-2xl shadow-2xl w-full max-w-7xl h-[800px] flex overflow-hidden"
           onClick={(e) => e.stopPropagation()}
+          data-aos="zoom-in"
+          data-aos-duration="400"
         >
           {/* Left Sidebar */}
           <div className="w-80 bg-gray-50 border-r border-gray-200 flex flex-col">

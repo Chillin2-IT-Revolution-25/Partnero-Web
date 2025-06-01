@@ -212,83 +212,83 @@ export default function FAQPage() {
       `}</style>
 
       <div className="min-h-screen bg-gray-50">
-        {/* Hero Section */}
-        <section className="bg-gradient-to-br from-[#CACA78]/10 via-[#CACA78]/5 to-[#9A9A4A]/15 py-16 sm:py-20 relative overflow-hidden">
-          {/* Background decoration */}
-          <div className="absolute inset-0 overflow-hidden">
-            <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#CACA78]/30 rounded-full filter blur-3xl opacity-80"></div>
-            <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-[#9A9A4A]/20 rounded-full filter blur-3xl opacity-80"></div>
+      {/* Hero Section */}
+      <section className="bg-gradient-to-br from-[#CACA78]/10 via-[#CACA78]/5 to-[#9A9A4A]/15 py-16 sm:py-20 relative overflow-hidden">
+      {/* Background decoration */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#CACA78]/30 rounded-full filter blur-3xl opacity-80"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-[#9A9A4A]/20 rounded-full filter blur-3xl opacity-80"></div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="text-center" data-aos="fade-up"  data-aos-duration="400">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-black text-gray-900 mb-6" style={{ fontFamily: 'Kanit, sans-serif' }}>
+            Frequently Asked
+            <br />
+            <span style={{ color: '#9A9A4A' }}>Questions</span>
+          </h1>
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8" style={{ fontFamily: 'Lato, sans-serif' }}>
+            Find answers to common questions about Partnero, partnerships, and how to grow your business through collaboration.
+          </p>
+
+          {/* Search Bar */}
+          <div className="max-w-2xl mx-auto" data-aos="fade-up" data-aos-delay="100">
+            <div className="relative">
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-6 h-6" />
+              <input
+                type="text"
+                placeholder="Search for answers..."
+                value={searchTerm}
+                onChange={(e) => handleSearchChange(e.target.value)}
+                className="w-full pl-12 pr-6 py-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#CACA78] focus:border-transparent shadow-lg text-lg"
+                style={{ fontFamily: 'Lato, sans-serif' }}
+              />
+            </div>
           </div>
+        </div>
+      </div>
+      </section>
 
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div className="text-center">
-              <h1 className="text-4xl sm:text-5xl md:text-6xl font-black text-gray-900 mb-6" style={{ fontFamily: 'Kanit, sans-serif' }}>
-                Frequently Asked
-                <br />
-                <span style={{ color: '#9A9A4A' }}>Questions</span>
-              </h1>
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8" style={{ fontFamily: 'Lato, sans-serif' }}>
-                Find answers to common questions about Partnero, partnerships, and how to grow your business through collaboration.
-              </p>
+      {/* Main Content */}
+      <section className="py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+            {/* Category Sidebar */}
+            <div className="lg:col-span-1" data-aos="fade-right">
+              <div className="bg-white rounded-xl shadow-sm p-6 sticky top-20">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4" style={{ fontFamily: 'K2D, sans-serif' }}>
+                  Categories
+                </h3>
+                <div className="space-y-2">
+                  {categories.map(category => (
+                    <button
+                      key={category.id}
+                      onClick={() => setSelectedCategory(category.id)}
+                      className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors duration-200 ${
+                        selectedCategory === category.id 
+                          ? 'bg-[#CACA78] text-white' 
+                          : 'hover:bg-gray-50 text-gray-700'
+                      }`}
+                    >
+                      <div className={`p-1 rounded ${selectedCategory === category.id ? 'bg-white/20' : category.color}`}>
+                        {category.icon}
+                      </div>
+                      <span className="font-medium text-sm" style={{ fontFamily: 'Lato, sans-serif' }}>
+                        {category.name}
+                      </span>
+                    </button>
+                  ))}
+                </div>
 
-              {/* Search Bar */}
-              <div className="max-w-2xl mx-auto">
-                <div className="relative">
-                  <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-6 h-6" />
-                  <input
-                    type="text"
-                    placeholder="Search for answers..."
-                    value={searchTerm}
-                    onChange={(e) => handleSearchChange(e.target.value)}
-                    className="w-full pl-12 pr-6 py-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#CACA78] focus:border-transparent shadow-lg text-lg"
-                    style={{ fontFamily: 'Lato, sans-serif' }}
-                  />
+                {/* Quick Stats */}
+                <div className="mt-8 pt-6 border-t border-gray-200">
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-[#9A9A4A]">{filteredFAQs.length}</div>
+                    <div className="text-sm text-gray-600">Questions Found</div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </section>
-
-        {/* Main Content */}
-        <section className="py-16">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-              {/* Category Sidebar */}
-              <div className="lg:col-span-1">
-                <div className="bg-white rounded-xl shadow-sm p-6 sticky top-20">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4" style={{ fontFamily: 'K2D, sans-serif' }}>
-                    Categories
-                  </h3>
-                  <div className="space-y-2">
-                    {categories.map(category => (
-                      <button
-                        key={category.id}
-                        onClick={() => setSelectedCategory(category.id)}
-                        className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors duration-200 ${
-                          selectedCategory === category.id 
-                            ? 'bg-[#CACA78] text-white' 
-                            : 'hover:bg-gray-50 text-gray-700'
-                        }`}
-                      >
-                        <div className={`p-1 rounded ${selectedCategory === category.id ? 'bg-white/20' : category.color}`}>
-                          {category.icon}
-                        </div>
-                        <span className="font-medium text-sm" style={{ fontFamily: 'Lato, sans-serif' }}>
-                          {category.name}
-                        </span>
-                      </button>
-                    ))}
-                  </div>
-
-                  {/* Quick Stats */}
-                  <div className="mt-8 pt-6 border-t border-gray-200">
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-[#9A9A4A]">{filteredFAQs.length}</div>
-                      <div className="text-sm text-gray-600">Questions Found</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
 
               {/* FAQ Content */}
               <div className="lg:col-span-3">

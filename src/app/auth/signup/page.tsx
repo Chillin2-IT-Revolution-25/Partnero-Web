@@ -1,12 +1,13 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Eye, EyeOff, Mail, Lock, User, Building, ArrowRight, AlertCircle, Check } from 'lucide-react'
 import Logo from '../../../assets/logo/Logo.svg'
 import { useAuth } from '@/contexts/AuthContext'
 import { categories } from '@/data/mockFormData'
+import { initAOS, refreshAOS } from '@/utils/aosUtils'
 
 export default function SignUpPage() {
   const router = useRouter()
@@ -167,6 +168,16 @@ export default function SignUpPage() {
     }
   }
 
+  // Initialize AOS when component mounts
+  useEffect(() => {
+    initAOS()
+    // Refresh AOS when step changes to animate new elements
+    refreshAOS()
+    return () => {
+      // Clean up if needed when component unmounts
+    }
+  }, [currentStep])
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#CACA78]/10 via-[#CACA78]/5 to-[#9A9A4A]/15 flex items-center justify-center p-4 relative overflow-hidden">
       {/* Add Google Fonts */}
@@ -182,7 +193,7 @@ export default function SignUpPage() {
 
       <div className="relative w-full max-w-lg">
         {/* Logo */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-8" data-aos="fade-down" data-aos-duration="600">
           <Link href="/" className="inline-flex items-center space-x-3">
             <img 
               src={Logo.src}
@@ -195,7 +206,7 @@ export default function SignUpPage() {
         </div>
 
         {/* Progress Steps */}
-        <div className="mb-8 relative">
+        <div className="mb-8 relative" data-aos="fade-up" data-aos-duration="600" data-aos-delay="200">
           <div className="flex items-center justify-between relative z-10">
             {[1, 2, 3].map((step) => (
               <div key={step} className="flex items-center">
@@ -228,7 +239,7 @@ export default function SignUpPage() {
         </div>
 
         {/* Sign Up Form */}
-        <div className="bg-white rounded-2xl shadow-xl p-8">
+        <div className="bg-white rounded-2xl shadow-xl p-8" data-aos="fade-up" data-aos-duration="800" data-aos-delay="300">
           <div className="text-center mb-6">
             <h1 className="text-2xl font-bold text-gray-900 mb-2">
               {currentStep === 1 && 'Create Your Account'}
@@ -256,7 +267,7 @@ export default function SignUpPage() {
             {/* Step 1: Personal Information */}
             {currentStep === 1 && (
               <div className="space-y-6">
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-4" data-aos="fade-up" data-aos-duration="400" data-aos-delay="400">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       First Name

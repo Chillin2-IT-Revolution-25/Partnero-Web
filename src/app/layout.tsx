@@ -1,13 +1,15 @@
 'use client'
 
 import { Inter } from 'next/font/google'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import './globals.css'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import ProfileModal from '@/components/ProfileModal'
 import { AuthProvider, useAuth } from '@/contexts/AuthContext'
+import { initAOS, refreshAOS } from '@/utils/aosUtils'
+import 'aos/dist/aos.css'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -16,6 +18,16 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
   const [showProfileModal, setShowProfileModal] = useState(false)
   const pathname = usePathname()
   const router = useRouter()
+
+  // Initialize AOS
+  useEffect(() => {
+    initAOS()
+  }, [])
+
+  // Refresh AOS on route change
+  useEffect(() => {
+    refreshAOS()
+  }, [pathname])
 
   // Pages that should not show header/footer (auth pages)
   const hideHeaderFooter = pathname?.startsWith('/auth/') || false

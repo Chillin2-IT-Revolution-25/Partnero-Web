@@ -189,16 +189,21 @@ export default function EmailModal({ businessId, onClose, isLoggedIn, user }: Em
   }
 
   return (
-    <>
-      {/* Backdrop */}
-      <div 
-        className="fixed inset-0 bg-black/20 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-        onClick={onClose}
-      >
-        {/* Modal */}
+    <div className="fixed inset-0 z-50 overflow-y-auto">
+      <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+        {/* Background overlay */}
         <div 
-          className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden"
-          onClick={(e) => e.stopPropagation()}
+          className="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75" 
+          onClick={onClose}
+          data-aos="fade"
+          data-aos-duration="300"
+        ></div>
+
+        {/* Modal panel */}
+        <div 
+          className="inline-block overflow-hidden text-left align-bottom transition-all transform bg-white rounded-lg shadow-xl sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full"
+          data-aos="zoom-in"
+          data-aos-duration="400"
         >
           {/* Header */}
           <div className="flex items-center justify-between p-6 border-b border-gray-200">
@@ -415,6 +420,6 @@ export default function EmailModal({ businessId, onClose, isLoggedIn, user }: Em
           </div>
         </div>
       </div>
-    </>
+    </div>
   )
 }
