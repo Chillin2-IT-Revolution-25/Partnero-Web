@@ -4,11 +4,11 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import BusinessList from '@/components/BusinessList'
 import EmailModal from '@/components/EmailModal'
-import { useAuth } from '@/contexts/AuthContext'
+import { useAuth, } from '@/contexts/AuthContext'
 import { initAOS, refreshAOS } from '@/utils/aosUtils'
 
 export default function BrowsePage() {
-  const { isLoggedIn } = useAuth()
+  const { isLoggedIn, user } = useAuth()
   const [showEmailModal, setShowEmailModal] = useState(false)
   const [selectedBusinessId, setSelectedBusinessId] = useState<string | null>(null)
   const router = useRouter()
@@ -48,6 +48,7 @@ export default function BrowsePage() {
             setSelectedBusinessId(null)
           }}
           isLoggedIn={isLoggedIn}
+          user={user}
         />
       )}
     </div>
