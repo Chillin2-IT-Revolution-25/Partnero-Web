@@ -20,21 +20,26 @@ interface FilterSidebarProps {
 
 export default function FilterSidebar({ isOpen, onClose, filters, onFilterChange }: FilterSidebarProps) {
   const [localFilters, setLocalFilters] = useState<Filters>(filters)
+  const [isVisible, setIsVisible] = useState(false)
 
   useEffect(() => {
     setLocalFilters(filters)
   }, [filters])
 
-  // Prevent body scroll when sidebar is open
+  // Handle opening/closing with proper transitions
   useEffect(() => {
     if (isOpen) {
-      // Store current scroll position
+      // Set visible first, then add the transform animation
+      setIsVisible(true)
+      // Prevent body scroll when sidebar is open
       const scrollY = window.scrollY
       document.body.style.position = 'fixed'
       document.body.style.top = `-${scrollY}px`
       document.body.style.width = '100%'
       document.body.style.overflow = 'hidden'
     } else {
+      // Start closing animation
+      setIsVisible(false)
       // Restore scroll position
       const scrollY = document.body.style.top
       document.body.style.position = ''
@@ -98,20 +103,28 @@ export default function FilterSidebar({ isOpen, onClose, filters, onFilterChange
     ))
   }
 
+  // Don't render anything if not open
+  if (!isOpen) {
+    return null
+  }
+
   return (
     <>
       {/* Backdrop */}
-      {isOpen && (
-        <div 
-          className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 transition-opacity duration-300"
-          onClick={onClose}
-        />
-      )}
+      <div 
+        className={`fixed inset-0 bg-black/20 backdrop-blur-sm z-40 transition-opacity duration-300 ${
+          isVisible ? 'opacity-100' : 'opacity-0'
+        }`}
+        onClick={onClose}
+      />
 
       {/* Sidebar */}
-      <div className={`fixed top-0 right-0 h-[calc(100vh-4rem)] w-full sm:w-96 bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-in-out ${
-        isOpen ? 'translate-x-0' : 'translate-x-full'
-      }`}>
+      <div 
+          className={`fixed top-0 right-0 h-[calc(100vh-4rem)] w-full sm:w-96 bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-in-out ${
+          isVisible ? 'translate-x-0' : 'translate-x-full'
+        }`}
+        style={{ maxWidth: '100vw' }} // Ensure it doesn't exceed viewport width
+      >
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-gray-200">
           <h2 className="text-xl font-semibold text-gray-900">Filters</h2>
@@ -153,7 +166,7 @@ export default function FilterSidebar({ isOpen, onClose, filters, onFilterChange
             <select
               value={localFilters.location}
               onChange={(e) => handleFilterChange('location', e.target.value === 'All Locations' ? '' : e.target.value)}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#CACA78] focus:border-transparent"
             >
               {allLocations.map(location => (
                 <option key={location} value={location}>
@@ -182,7 +195,7 @@ export default function FilterSidebar({ isOpen, onClose, filters, onFilterChange
                   />
                   <div className={`flex items-center w-full p-3 border rounded-lg transition-colors duration-200 ${
                     localFilters.platform === platform.value 
-                      ? 'border-purple-500 bg-purple-50' 
+                      ? 'border-[#CACA78] bg-[#CACA78]/10' 
                       : 'border-gray-300 hover:bg-gray-50'
                   }`}>
                     {platform.icon && <div className="mr-3">{platform.icon}</div>}
@@ -212,7 +225,7 @@ export default function FilterSidebar({ isOpen, onClose, filters, onFilterChange
                   />
                   <div className={`flex items-center w-full p-3 border rounded-lg transition-colors duration-200 ${
                     localFilters.rating === rating 
-                      ? 'border-purple-500 bg-purple-50' 
+                      ? 'border-[#CACA78] bg-[#CACA78]/10' 
                       : 'border-gray-300 hover:bg-gray-50'
                   }`}>
                     <div className="flex items-center mr-3">
@@ -238,7 +251,7 @@ export default function FilterSidebar({ isOpen, onClose, filters, onFilterChange
                 <label key={type} className="flex items-center">
                   <input
                     type="checkbox"
-                    className="rounded border-gray-300 text-purple-600 focus:ring-purple-500 mr-3"
+                    className="rounded border-gray-300 text-[#9A9A4A] focus:ring-[#CACA78] mr-3"
                   />
                   <span className="text-sm text-gray-700">{type}</span>
                 </label>
@@ -248,7 +261,7 @@ export default function FilterSidebar({ isOpen, onClose, filters, onFilterChange
         </div>
 
         {/* Footer Actions */}
-        <div className="absolute bottom-[-15px] left-0 right-0 p-6 bg-white border-t border-gray-200">
+        <div className="absolute bottom-0 left-0 right-0 p-6 bg-white border-t border-gray-200">
           <div className="flex space-x-3">
             <button
               onClick={handleClearFilters}
