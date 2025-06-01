@@ -109,7 +109,7 @@ export default function FilterSidebar({ isOpen, onClose, filters, onFilterChange
       )}
 
       {/* Sidebar */}
-      <div className={`fixed top-16 right-0 h-[calc(100vh-4rem)] w-full sm:w-96 bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-in-out ${
+      <div className={`fixed top-0 right-0 h-[calc(100vh-4rem)] w-full sm:w-96 bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-in-out ${
         isOpen ? 'translate-x-0' : 'translate-x-full'
       }`}>
         {/* Header */}
