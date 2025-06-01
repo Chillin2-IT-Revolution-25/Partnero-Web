@@ -14,6 +14,8 @@ export interface User {
   business: BusinessProfile
 }
 
+export type { AuthUser, LoginCredentials, RegisterData, AuthResponse, AuthContextType } from './auth'
+
 export interface BusinessProfile {
   name: string
   description: string
@@ -34,14 +36,6 @@ export interface SocialMediaLinks {
   pinterest?: string
   telegram?: string
   website?: string
-}
-
-export interface AuthContextType {
-  isLoggedIn: boolean
-  user: User | null
-  login: (userData: User) => void
-  logout: () => void
-  updateUser: (userData: User) => void
 }
 
 // Form and Filter Types

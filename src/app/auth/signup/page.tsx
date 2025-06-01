@@ -1,3 +1,4 @@
+// src/app/auth/signup/page.tsx
 'use client'
 
 import { useState, useEffect } from 'react'
@@ -11,7 +12,7 @@ import { initAOS, refreshAOS } from '@/utils/aosUtils'
 
 export default function SignUpPage() {
   const router = useRouter()
-  const { login } = useAuth()
+  const { register } = useAuth()
   const [currentStep, setCurrentStep] = useState(1)
   const [formData, setFormData] = useState({
     // Personal Info
@@ -22,7 +23,6 @@ export default function SignUpPage() {
     confirmPassword: '',
     // Business Info
     businessName: '',
-    businessType: 'business', // Always set to business
     category: '',
     description: '',
     // Preferences
@@ -139,30 +139,29 @@ export default function SignUpPage() {
     }
 
     setIsLoading(true)
+    setErrors({}) // Clear any existing errors
 
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000))
-      
-      const userData = {
-        name: `${formData.firstName} ${formData.lastName}`,
+      const result = await register({
+        firstName: formData.firstName,
+        lastName: formData.lastName,
         email: formData.email,
-        avatar: '/api/placeholder/40/40',
-        business: {
-          name: formData.businessName,
-          description: formData.description,
-          location: 'Not specified',
-          category: formData.category
-        }
+        password: formData.password,
+        confirmPassword: formData.confirmPassword,
+        businessName: formData.businessName,
+        category: formData.category,
+        description: formData.description
+      })
+      
+      if (result.success) {
+        // Redirect to home page
+        router.push('/')
+      } else {
+        setErrors({ general: result.error || 'Registration failed. Please try again.' })
       }
-      
-      // Use the login function from context
-      login(userData)
-      
-      // Redirect to home page
-      router.push('/')
     } catch (error) {
-      setErrors({ general: 'Something went wrong. Please try again.' })
+      console.error('Registration error:', error)
+      setErrors({ general: 'An unexpected error occurred. Please try again.' })
     } finally {
       setIsLoading(false)
     }
@@ -173,9 +172,6 @@ export default function SignUpPage() {
     initAOS()
     // Refresh AOS when step changes to animate new elements
     refreshAOS()
-    return () => {
-      // Clean up if needed when component unmounts
-    }
   }, [currentStep])
 
   return (
@@ -282,6 +278,7 @@ export default function SignUpPage() {
                           errors.firstName ? 'border-red-500' : 'border-gray-300'
                         }`}
                         placeholder="John"
+                        disabled={isLoading}
                       />
                     </div>
                     {errors.firstName && <p className="text-red-500 text-xs mt-1">{errors.firstName}</p>}
@@ -299,6 +296,7 @@ export default function SignUpPage() {
                         errors.lastName ? 'border-red-500' : 'border-gray-300'
                       }`}
                       placeholder="Doe"
+                      disabled={isLoading}
                     />
                     {errors.lastName && <p className="text-red-500 text-xs mt-1">{errors.lastName}</p>}
                   </div>
@@ -318,6 +316,7 @@ export default function SignUpPage() {
                         errors.email ? 'border-red-500' : 'border-gray-300'
                       }`}
                       placeholder="your.email@example.com"
+                      disabled={isLoading}
                     />
                   </div>
                   {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
@@ -337,11 +336,13 @@ export default function SignUpPage() {
                         errors.password ? 'border-red-500' : 'border-gray-300'
                       }`}
                       placeholder="Create a strong password"
+                      disabled={isLoading}
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
                       className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                      disabled={isLoading}
                     >
                       {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                     </button>
@@ -363,11 +364,13 @@ export default function SignUpPage() {
                         errors.confirmPassword ? 'border-red-500' : 'border-gray-300'
                       }`}
                       placeholder="Confirm your password"
+                      disabled={isLoading}
                     />
                     <button
                       type="button"
                       onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                       className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                      disabled={isLoading}
                     >
                       {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                     </button>
@@ -394,6 +397,7 @@ export default function SignUpPage() {
                         errors.businessName ? 'border-red-500' : 'border-gray-300'
                       }`}
                       placeholder="Your business name"
+                      disabled={isLoading}
                     />
                   </div>
                   {errors.businessName && <p className="text-red-500 text-xs mt-1">{errors.businessName}</p>}
@@ -409,6 +413,7 @@ export default function SignUpPage() {
                     className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#CACA78] focus:border-transparent ${
                       errors.category ? 'border-red-500' : 'border-gray-300'
                     }`}
+                    disabled={isLoading}
                   >
                     <option value="">Select your category</option>
                     {categories.map(category => (
@@ -430,6 +435,7 @@ export default function SignUpPage() {
                       errors.description ? 'border-red-500' : 'border-gray-300'
                     }`}
                     placeholder="Tell us about your business and what you do. What kind of partnerships are you looking for?"
+                    disabled={isLoading}
                   />
                   <div className="flex justify-between items-center mt-1">
                     {errors.description && <p className="text-red-500 text-xs">{errors.description}</p>}
@@ -475,6 +481,7 @@ export default function SignUpPage() {
                       checked={formData.agreeToTerms}
                       onChange={(e) => handleInputChange('agreeToTerms', e.target.checked)}
                       className="rounded border-gray-300 text-[#9A9A4A] focus:ring-[#CACA78] mt-1 mr-3"
+                      disabled={isLoading}
                     />
                     <span className="text-sm text-gray-700">
                       I agree to the{' '}
@@ -491,6 +498,7 @@ export default function SignUpPage() {
                       checked={formData.receiveUpdates}
                       onChange={(e) => handleInputChange('receiveUpdates', e.target.checked)}
                       className="rounded border-gray-300 text-[#9A9A4A] focus:ring-[#CACA78] mt-1 mr-3"
+                      disabled={isLoading}
                     />
                     <span className="text-sm text-gray-700">
                       I would like to receive partnership opportunities and platform updates via email
@@ -507,6 +515,7 @@ export default function SignUpPage() {
                   type="button"
                   onClick={handleBack}
                   className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors duration-200 font-medium"
+                  disabled={isLoading}
                 >
                   Back
                 </button>
@@ -519,6 +528,7 @@ export default function SignUpPage() {
                   type="button"
                   onClick={handleNext}
                   className="px-6 py-3 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors duration-200 font-medium flex items-center"
+                  disabled={isLoading}
                 >
                   Next
                   <ArrowRight className="w-5 h-5 ml-2" />

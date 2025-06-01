@@ -5,6 +5,8 @@ import { X, User, Settings, LogOut, Camera, MapPin, Mail, Phone, Globe, Save, Ed
 import Logo from '../assets/logo/Logo.svg'
 
 interface User {
+  firstName: string
+  lastName: string
   name: string
   email: string
   avatar: string
@@ -50,8 +52,15 @@ export default function ProfileModal({ user, onClose, onLogout }: ProfileModalPr
   }, [])
 
   const handleSave = () => {
+    // Update the full name when first/last name changes
+    const updatedUser = {
+      ...editedUser,
+      name: `${editedUser.firstName} ${editedUser.lastName}`
+    }
+    setEditedUser(updatedUser)
+    
     // Here you would typically save to your backend
-    console.log('Saving user data:', editedUser)
+    console.log('Saving user data:', updatedUser)
     setIsEditing(false)
     setShowSaveSuccess(true)
     setTimeout(() => setShowSaveSuccess(false), 3000)
@@ -79,8 +88,8 @@ export default function ProfileModal({ user, onClose, onLogout }: ProfileModalPr
     }
   }
 
-  const getInitials = (name: string) => {
-    return name.charAt(0).toUpperCase()
+  const getInitials = (firstName: string, lastName: string) => {
+    return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase()
   }
 
   const menuItems = [
@@ -230,7 +239,7 @@ export default function ProfileModal({ user, onClose, onLogout }: ProfileModalPr
                     <div className="relative">
                       <div className="w-20 h-20 bg-[#CACA78] rounded-full flex items-center justify-center">
                         <span className="text-white font-bold text-2xl">
-                          {getInitials(editedUser.name)}
+                          {getInitials(editedUser.firstName || 'U', editedUser.lastName || 'U')}
                         </span>
                       </div>
                       {isEditing && (
@@ -240,12 +249,12 @@ export default function ProfileModal({ user, onClose, onLogout }: ProfileModalPr
                       )}
                     </div>
                     <div>
-                      <h3 className="text-lg font-semibold text-gray-900">{editedUser.name}</h3>
-                      <p className="text-gray-500 text-sm">Your profile displays the first letter of your name</p>
+                      <h3 className="text-lg font-semibold text-gray-900">{editedUser.firstName} {editedUser.lastName}</h3>
+                      <p className="text-gray-500 text-sm">Your profile displays your initials</p>
                       {isEditing && (
-                        <button className="mt-2 text-[#9A9A4A] hover:text-[#8A8A3A] text-sm font-medium">
-                          Change display name to update initial
-                        </button>
+                        <p className="mt-2 text-[#9A9A4A] text-sm font-medium">
+                          Update your name below to change the initials
+                        </p>
                       )}
                     </div>
                   </div>
@@ -253,20 +262,36 @@ export default function ProfileModal({ user, onClose, onLogout }: ProfileModalPr
                   {/* Personal Details */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">First Name</label>
                       {isEditing ? (
                         <input
                           type="text"
-                          value={editedUser.name}
-                          onChange={(e) => handleInputChange('name', e.target.value)}
+                          value={editedUser.firstName}
+                          onChange={(e) => handleInputChange('firstName', e.target.value)}
                           className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#CACA78] focus:border-transparent"
+                          placeholder="Enter your first name"
                         />
                       ) : (
-                        <p className="p-3 bg-gray-50 rounded-lg text-gray-900">{editedUser.name}</p>
+                        <p className="p-3 bg-gray-50 rounded-lg text-gray-900">{editedUser.firstName}</p>
                       )}
                     </div>
 
                     <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
+                      {isEditing ? (
+                        <input
+                          type="text"
+                          value={editedUser.lastName}
+                          onChange={(e) => handleInputChange('lastName', e.target.value)}
+                          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#CACA78] focus:border-transparent"
+                          placeholder="Enter your last name"
+                        />
+                      ) : (
+                        <p className="p-3 bg-gray-50 rounded-lg text-gray-900">{editedUser.lastName}</p>
+                      )}
+                    </div>
+
+                    <div className="md:col-span-2">
                       <label className="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
                       {isEditing ? (
                         <input
@@ -523,14 +548,6 @@ export default function ProfileModal({ user, onClose, onLogout }: ProfileModalPr
                       <label className="flex items-center">
                         <input type="checkbox" className="rounded border-gray-300 text-[#9A9A4A] focus:ring-[#CACA78] mr-3" defaultChecked />
                         <span className="text-[#8A8A3A] text-sm">Show my business in public listings</span>
-                      </label>
-                      <label className="flex items-center">
-                        <input type="checkbox" className="rounded border-gray-300 text-[#9A9A4A] focus:ring-[#CACA78] mr-3" defaultChecked />
-                        <span className="text-[#8A8A3A] text-sm">Allow direct contact from potential partners</span>
-                      </label>
-                      <label className="flex items-center">
-                        <input type="checkbox" className="rounded border-gray-300 text-[#9A9A4A] focus:ring-[#CACA78] mr-3" />
-                        <span className="text-[#8A8A3A] text-sm">Featured business (premium option)</span>
                       </label>
                     </div>
                   </div>

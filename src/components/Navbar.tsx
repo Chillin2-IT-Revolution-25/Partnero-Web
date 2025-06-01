@@ -1,3 +1,4 @@
+// src/components/Navbar.tsx
 'use client'
 
 import { useState } from 'react'
@@ -7,9 +8,13 @@ import { Menu, X, Settings, LogOut, ChevronDown } from 'lucide-react'
 import Logo from '../assets/logo/Logo.svg'
 
 interface User {
+  firstName: string
+  lastName: string
   name: string
   email: string
   avatar: string
+  userId: string
+  accessToken: string
   business: {
     name: string
     description: string
@@ -54,9 +59,14 @@ export default function Navbar({ isLoggedIn, user, onProfileClick, onLogout, onB
     router.push('/auth/signup')
   }
 
-  // Function to get the first letter of the user's name
-  const getInitials = (name: string) => {
-    return name.charAt(0).toUpperCase()
+  // Updated function to get user initials
+  const getInitials = (user: User) => {
+    if (user.firstName && user.lastName) {
+      return `${user.firstName.charAt(0)}${user.lastName.charAt(0)}`.toUpperCase()
+    } else if (user.name) {
+      return user.name.charAt(0).toUpperCase()
+    }
+    return 'U'
   }
 
   return (
@@ -116,7 +126,7 @@ export default function Navbar({ isLoggedIn, user, onProfileClick, onLogout, onB
                   {/* User Initial Avatar */}
                   <div className="w-8 h-8 bg-[#CACA78] rounded-full flex items-center justify-center">
                     <span className="text-white font-semibold text-sm">
-                      {user ? getInitials(user.name) : 'U'}
+                      {user ? getInitials(user) : 'U'}
                     </span>
                   </div>
                   <ChevronDown className="w-4 h-4 text-gray-500" />
@@ -126,7 +136,12 @@ export default function Navbar({ isLoggedIn, user, onProfileClick, onLogout, onB
                 {isProfileDropdownOpen && (
                   <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2">
                     <div className="px-4 py-2 border-b border-gray-100">
-                      <p className="text-sm font-medium text-gray-900">{user?.name || 'User'}</p>
+                      <p className="text-sm font-medium text-gray-900">
+                        {user?.firstName && user?.lastName 
+                          ? `${user.firstName} ${user.lastName}` 
+                          : user?.name || 'User'
+                        }
+                      </p>
                       <p className="text-xs text-gray-500">{user?.email || 'user@example.com'}</p>
                     </div>
                     <button

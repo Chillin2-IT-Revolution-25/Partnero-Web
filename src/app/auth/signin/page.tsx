@@ -1,3 +1,4 @@
+// src/app/auth/signin/page.tsx
 'use client'
 
 import { useState, useEffect } from 'react'
@@ -6,8 +7,7 @@ import Link from 'next/link'
 import { Eye, EyeOff, Mail, Lock, ArrowRight, AlertCircle } from 'lucide-react'
 import Logo from '../../../assets/logo/Logo.svg'
 import { useAuth } from '@/contexts/AuthContext'
-import { demoCredentials, validateCredentials } from '@/data/mockUsers'
-import { initAOS, refreshAOS } from '@/utils/aosUtils'
+import { initAOS } from '@/utils/aosUtils'
 
 export default function SignInPage() {
   const router = useRouter()
@@ -23,9 +23,6 @@ export default function SignInPage() {
   // Initialize AOS when component mounts
   useEffect(() => {
     initAOS()
-    return () => {
-      // Clean up or refresh if needed when component unmounts
-    }
   }, [])
   
   const handleInputChange = (field: string, value: string) => {
@@ -69,25 +66,49 @@ export default function SignInPage() {
     }
 
     setIsLoading(true)
+    setErrors({}) // Clear any existing errors
 
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500))
+      const result = await login({
+        email: formData.email,
+        password: formData.password
+      })
       
-      // Validate credentials using the mock data
-      const userData = validateCredentials(formData.email, formData.password)
-      
-      if (userData) {
-        // Use the login function from context
-        login(userData)
-        
+      if (result.success) {
         // Redirect to home page
         router.push('/')
       } else {
-        setErrors({ general: 'Invalid email or password' })
+        setErrors({ general: result.error || 'Invalid email or password' })
       }
     } catch (error) {
-      setErrors({ general: 'Something went wrong. Please try again.' })
+      console.error('Login error:', error)
+      setErrors({ general: 'An unexpected error occurred. Please try again.' })
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handleDemoLogin = async () => {
+    setFormData({
+      email: 'demo@partnero.com',
+      password: 'password'
+    })
+    
+    // Auto-submit with demo credentials
+    setIsLoading(true)
+    try {
+      const result = await login({
+        email: 'demo@partnero.com',
+        password: 'password'
+      })
+      
+      if (result.success) {
+        router.push('/')
+      } else {
+        setErrors({ general: 'Demo login failed. Please try manual login.' })
+      }
+    } catch (error) {
+      setErrors({ general: 'Demo login failed. Please try manual login.' })
     } finally {
       setIsLoading(false)
     }
@@ -127,15 +148,6 @@ export default function SignInPage() {
             <p className="text-gray-600">Enter your credentials to access your account</p>
           </div>
 
-          {/* Demo Credentials Notice */}
-          {/* <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-            <div className="text-center">
-              <p className="text-blue-800 text-sm font-medium mb-1">Demo Credentials</p>
-              <p className="text-blue-700 text-xs">Email: {demoCredentials.email}</p>
-              <p className="text-blue-700 text-xs">Password: {demoCredentials.password}</p>
-            </div>
-          </div> */}
-
           {/* Error Message */}
           {errors.general && (
             <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
@@ -146,7 +158,7 @@ export default function SignInPage() {
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-4">
             {/* Email Field */}
             <div data-aos="fade-up" data-aos-duration="400" data-aos-delay="300">
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -162,6 +174,7 @@ export default function SignInPage() {
                     errors.email ? 'border-red-500' : 'border-gray-300'
                   }`}
                   placeholder="your.email@example.com"
+                  disabled={isLoading}
                 />
               </div>
               {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
@@ -182,11 +195,13 @@ export default function SignInPage() {
                     errors.password ? 'border-red-500' : 'border-gray-300'
                   }`}
                   placeholder="Enter your password"
+                  disabled={isLoading}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  disabled={isLoading}
                 >
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
@@ -194,25 +209,11 @@ export default function SignInPage() {
               {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password}</p>}
             </div>
 
-            {/* Remember Me & Forgot Password */}
-            <div className="flex items-center justify-between" data-aos="fade-up" data-aos-duration="400" data-aos-delay="500">
-              <label className="flex items-center">
-                <input
-                  type="checkbox"
-                  className="rounded border-gray-300 text-[#9A9A4A] focus:ring-[#CACA78]"
-                />
-                <span className="ml-2 text-sm text-gray-600">Remember me</span>
-              </label>
-              <Link href="/auth/forgot-password" className="text-sm text-[#9A9A4A] hover:text-[#8A8A3A]">
-                Forgot password?
-              </Link>
-            </div>
-
             {/* Submit Button */}
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-black text-white py-3 px-4 rounded-lg hover:bg-gray-800 transition-colors duration-200 font-medium flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-black text-white mt-8 py-3 px-4 rounded-lg hover:bg-gray-800 transition-colors duration-200 font-medium flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
               data-aos="fade-up" data-aos-duration="400" data-aos-delay="600"
             >
               {isLoading ? (
@@ -241,7 +242,10 @@ export default function SignInPage() {
             </div>
 
             <div className="mt-6 grid grid-cols-2 gap-3">
-              <button className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-lg shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+              <button 
+                className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-lg shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50"
+                disabled={isLoading}
+              >
                 <svg className="w-5 h-5" viewBox="0 0 24 24">
                   <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                   <path fill="currentColor" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
@@ -251,7 +255,10 @@ export default function SignInPage() {
                 <span className="ml-2">Google</span>
               </button>
 
-              <button className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-lg shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+              <button 
+                className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-lg shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50"
+                disabled={isLoading}
+              >
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
                 </svg>
