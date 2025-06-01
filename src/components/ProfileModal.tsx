@@ -240,7 +240,7 @@ export default function ProfileModal({ user, onClose, onLogout }: ProfileModalPr
                       )}
                     </div>
                     <div>
-                      <h3 className="text-lg font-semibold text-gray-900">Profile Picture</h3>
+                      <h3 className="text-lg font-semibold text-gray-900">{editedUser.name}</h3>
                       <p className="text-gray-500 text-sm">Your profile displays the first letter of your name</p>
                       {isEditing && (
                         <button className="mt-2 text-[#9A9A4A] hover:text-[#8A8A3A] text-sm font-medium">
