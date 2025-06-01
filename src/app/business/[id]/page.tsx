@@ -13,6 +13,7 @@ import {
 import EmailModal from '@/components/EmailModal'
 import { useAuth } from '@/contexts/AuthContext'
 import { businessService, type BusinessData, ApiError } from '@/services/businessService'
+import { getBusinessById, type Business } from '@/data/mockBusinesses'
 
 // Business data interface matching the API response
 interface BusinessLocation {
@@ -86,6 +87,7 @@ export default function BusinessDetailPage() {
   
   // State management
   const [business, setBusiness] = useState<BusinessData | null>(null)
+  const [mockBusiness, setMockBusiness] = useState<Business | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [showEmailModal, setShowEmailModal] = useState(false)
@@ -102,8 +104,9 @@ export default function BusinessDetailPage() {
   const [showContactForm, setShowContactForm] = useState(false)
   const [copiedUrl, setCopiedUrl] = useState(false)
   const [expandedFaqs, setExpandedFaqs] = useState<number[]>([])
+  const [isUsingMockData, setIsUsingMockData] = useState(false)
 
-  // Fetch business data from API
+  // Fetch business data from API with fallback to mock data
   useEffect(() => {
     const fetchBusinessData = async () => {
       if (!params.id) return
@@ -112,21 +115,33 @@ export default function BusinessDetailPage() {
         setLoading(true)
         setError(null)
         
-        const data = await businessService.getBusinessById(params.id as string)
-        setBusiness(data)
-        
-        // Reset image index if business has images
-        if (data.businessImageUrls && data.businessImageUrls.length > 0) {
-          setCurrentImageIndex(0)
+        // First try to get data from API
+        try {
+          const data = await businessService.getBusinessById(params.id as string)
+          setBusiness(data)
+          setIsUsingMockData(false)
+          
+          // Reset image index if business has images
+          if (data.businessImageUrls && data.businessImageUrls.length > 0) {
+            setCurrentImageIndex(0)
+          }
+        } catch (apiError) {
+          console.log('API failed, falling back to mock data:', apiError)
+          
+          // Fallback to mock data
+          const mockData = getBusinessById(params.id as string)
+          if (mockData) {
+            setMockBusiness(mockData)
+            setIsUsingMockData(true)
+            setCurrentImageIndex(0)
+          } else {
+            throw new Error('Business not found in both API and mock data')
+          }
         }
       } catch (err) {
         console.error('Error fetching business data:', err)
         if (err instanceof ApiError) {
           setError(err.message)
-          // You can also display err.details for more debugging info
-          if (err.details) {
-            console.error('Error details:', err.details)
-          }
         } else {
           setError('Failed to load business data')
         }
@@ -341,17 +356,75 @@ export default function BusinessDetailPage() {
     }
   ]
 
-  // Helper functions
-  const formatLocation = (location: BusinessData['location']): string => {
-    return businessService.formatLocation(location)
+  // Helper functions for both API and mock data
+  const getBusinessName = (): string => {
+    if (isUsingMockData && mockBusiness) {
+      return mockBusiness.name
+    }
+    return business?.businessName || 'Business Name'
   }
 
-  const getFullAddress = (location: BusinessData['location']): string => {
-    return businessService.getFullAddress(location)
+  const getBusinessDescription = (): string => {
+    if (isUsingMockData && mockBusiness) {
+      return mockBusiness.description
+    }
+    return business?.description || 'Business description not available'
   }
 
-  const getCompanySizeLabel = (size: number): string => {
-    return businessService.getCompanySizeLabel(size)
+  const getBusinessCategory = (): string => {
+    if (isUsingMockData && mockBusiness) {
+      return mockBusiness.category
+    }
+    return business?.category || 'Category'
+  }
+
+  const getBusinessImages = (): string[] => {
+    if (isUsingMockData && mockBusiness) {
+      return [mockBusiness.image]
+    }
+    return business?.businessImageUrls || ['/api/placeholder/800/600']
+  }
+
+  const getBusinessLocation = (): string => {
+    if (isUsingMockData && mockBusiness) {
+      return mockBusiness.location
+    }
+    return business ? businessService.formatLocation(business.location) : 'Location not available'
+  }
+
+  const getBusinessRating = (): number => {
+    if (isUsingMockData && mockBusiness) {
+      return mockBusiness.rating
+    }
+    return mockStats.averageRating
+  }
+
+  const getBusinessFoundedYear = (): number | undefined => {
+    if (isUsingMockData) {
+      return undefined
+    }
+    return business?.foundedYear
+  }
+
+  const getBusinessCompanySize = (): string => {
+    if (isUsingMockData) {
+      return 'Small Business'
+    }
+    return business ? businessService.getCompanySizeLabel(business.companySize) : 'Unknown'
+  }
+
+  const getBusinessId = (): string => {
+    if (isUsingMockData && mockBusiness) {
+      return mockBusiness.id
+    }
+    return business?.id?.timestamp?.toString() || params.id as string
+  }
+
+  const getSocialMedia = () => {
+    if (isUsingMockData) {
+      return {}
+    }
+    return business?.socialMedia || {}
   }
 
   const handleEmailBusiness = () => {
@@ -412,15 +485,17 @@ export default function BusinessDetailPage() {
     }
   }
 
+  const businessImages = getBusinessImages()
+
   const nextImage = () => {
-    if (business && business.businessImageUrls.length > 0) {
-      setCurrentImageIndex((prev) => (prev + 1) % business.businessImageUrls.length)
+    if (businessImages.length > 0) {
+      setCurrentImageIndex((prev) => (prev + 1) % businessImages.length)
     }
   }
 
   const prevImage = () => {
-    if (business && business.businessImageUrls.length > 0) {
-      setCurrentImageIndex((prev) => (prev - 1 + business.businessImageUrls.length) % business.businessImageUrls.length)
+    if (businessImages.length > 0) {
+      setCurrentImageIndex((prev) => (prev - 1 + businessImages.length) % businessImages.length)
     }
   }
 
@@ -446,7 +521,7 @@ export default function BusinessDetailPage() {
   }
 
   // Error state
-  if (error || !business) {
+  if (error || (!business && !mockBusiness)) {
     return (
       <div className="bg-gray-50 min-h-screen flex items-center justify-center">
         <div className="text-center max-w-md mx-auto px-4">
@@ -498,7 +573,8 @@ export default function BusinessDetailPage() {
     : mockPortfolio.filter(item => item.category === portfolioFilter)
 
   // Get available social platforms
-  const availablePlatforms = businessService.getAvailableSocialPlatforms(business.socialMedia)
+  const socialMedia = getSocialMedia()
+  const availablePlatforms = businessService.getAvailableSocialPlatforms(socialMedia)
 
   const portfolioCategories = ['all', ...Array.from(new Set(mockPortfolio.map(item => item.category)))]
 
@@ -510,6 +586,16 @@ export default function BusinessDetailPage() {
           <div className="flex items-center">
             <Lock className="w-4 h-4 mr-2" />
             Please login to interact with businesses
+          </div>
+        </div>
+      )}
+
+      {/* Data Source Indicator */}
+      {isUsingMockData && (
+        <div className="fixed top-4 left-4 bg-blue-100 border border-blue-300 text-blue-700 px-3 py-2 rounded-lg text-sm z-50 shadow-lg">
+          <div className="flex items-center">
+            <Info className="w-4 h-4 mr-2" />
+            Demo Data
           </div>
         </div>
       )}
@@ -531,7 +617,7 @@ export default function BusinessDetailPage() {
               <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
                 <input
                   type="text"
-                  value={window.location.href}
+                  value={typeof window !== 'undefined' ? window.location.href : ''}
                   readOnly
                   className="flex-1 bg-transparent text-sm text-gray-600"
                 />
@@ -541,26 +627,6 @@ export default function BusinessDetailPage() {
                 >
                   {copiedUrl ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
                   <span className="text-sm">{copiedUrl ? 'Copied!' : 'Copy'}</span>
-                </button>
-              </div>
-              <div className="grid grid-cols-3 gap-3">
-                <button className="flex flex-col items-center p-3 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors duration-200">
-                  <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center mb-2">
-                    <span className="text-white text-xs font-bold">f</span>
-                  </div>
-                  <span className="text-xs text-gray-600">Facebook</span>
-                </button>
-                <button className="flex flex-col items-center p-3 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors duration-200">
-                  <div className="w-8 h-8 bg-blue-400 rounded-full flex items-center justify-center mb-2">
-                    <span className="text-white text-xs font-bold">T</span>
-                  </div>
-                  <span className="text-xs text-gray-600">Twitter</span>
-                </button>
-                <button className="flex flex-col items-center p-3 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors duration-200">
-                  <div className="w-8 h-8 bg-blue-700 rounded-full flex items-center justify-center mb-2">
-                    <span className="text-white text-xs font-bold">in</span>
-                  </div>
-                  <span className="text-xs text-gray-600">LinkedIn</span>
                 </button>
               </div>
             </div>
@@ -582,12 +648,12 @@ export default function BusinessDetailPage() {
           {/* Left Column - Main Content */}
           <div className="lg:col-span-2">
             {/* Image Gallery */}
-            {business.businessImageUrls && business.businessImageUrls.length > 0 && (
+            {businessImages.length > 0 && (
               <div className="relative mb-8">
                 <div className="relative h-96 rounded-lg overflow-hidden">
                   <img
-                    src={business.businessImageUrls[currentImageIndex] || '/api/placeholder/800/600'}
-                    alt={business.businessName}
+                    src={businessImages[currentImageIndex] || '/api/placeholder/800/600'}
+                    alt={getBusinessName()}
                     className="w-full h-full object-cover"
                     onError={(e) => {
                       (e.target as HTMLImageElement).src = '/api/placeholder/800/600'
@@ -596,19 +662,19 @@ export default function BusinessDetailPage() {
                   
                   {/* Badge Overlay */}
                   <div className="absolute top-4 left-4 flex space-x-2">
-                    {mockStats.averageRating >= 4.5 && (
+                    {getBusinessRating() >= 4.5 && (
                       <div className="bg-yellow-500 text-white px-3 py-1 rounded-full text-sm font-medium flex items-center">
                         <Star className="w-4 h-4 mr-1 fill-current" />
                         Top Rated
                       </div>
                     )}
                     <div className="bg-black bg-opacity-70 text-white px-3 py-1 rounded-full text-sm">
-                      {business.businessImageUrls.length} Photos
+                      {businessImages.length} Photos
                     </div>
                   </div>
                   
                   {/* Navigation Buttons */}
-                  {business.businessImageUrls.length > 1 && (
+                  {businessImages.length > 1 && (
                     <>
                       <button
                         onClick={prevImage}
@@ -626,9 +692,9 @@ export default function BusinessDetailPage() {
                   )}
 
                   {/* Image Indicators */}
-                  {business.businessImageUrls.length > 1 && (
+                  {businessImages.length > 1 && (
                     <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
-                      {business.businessImageUrls.map((_, index) => (
+                      {businessImages.map((_, index) => (
                         <button
                           key={index}
                           onClick={() => setCurrentImageIndex(index)}
@@ -642,9 +708,9 @@ export default function BusinessDetailPage() {
                 </div>
 
                 {/* Thumbnail Gallery */}
-                {business.businessImageUrls.length > 1 && (
+                {businessImages.length > 1 && (
                   <div className="flex space-x-2 mt-4 overflow-x-auto">
-                    {business.businessImageUrls.map((image, index) => (
+                    {businessImages.map((image, index) => (
                       <button
                         key={index}
                         onClick={() => setCurrentImageIndex(index)}
@@ -654,7 +720,7 @@ export default function BusinessDetailPage() {
                       >
                         <img
                           src={image || '/api/placeholder/80/80'}
-                          alt={`${business.businessName} ${index + 1}`}
+                          alt={`${getBusinessName()} ${index + 1}`}
                           className="w-full h-full object-cover"
                           onError={(e) => {
                             (e.target as HTMLImageElement).src = '/api/placeholder/80/80'
@@ -672,8 +738,8 @@ export default function BusinessDetailPage() {
               <div className="flex items-start justify-between mb-4">
                 <div className="flex-1">
                   <div className="flex items-center space-x-3 mb-2">
-                    <h1 className="text-3xl font-bold text-gray-900">{business.businessName}</h1>
-                    {mockStats.averageRating >= 4.5 && (
+                    <h1 className="text-3xl font-bold text-gray-900">{getBusinessName()}</h1>
+                    {getBusinessRating() >= 4.5 && (
                       <div className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs font-medium flex items-center">
                         <Award className="w-3 h-3 mr-1" />
                         Verified
@@ -681,10 +747,10 @@ export default function BusinessDetailPage() {
                     )}
                   </div>
                   <p className="text-lg text-gray-600 mb-3">
-                    Expert {business.category} services with proven results
+                    Expert {getBusinessCategory()} services with proven results
                   </p>
                   <span className="inline-block bg-[#CACA78]/20 text-[#8A8A3A] text-sm px-3 py-1 rounded-full font-medium">
-                    {business.category}
+                    {getBusinessCategory()}
                   </span>
                 </div>
               </div>
@@ -700,7 +766,7 @@ export default function BusinessDetailPage() {
                   <div className="text-sm text-gray-600">Client Retention</div>
                 </div>
                 <div className="text-center p-3 bg-gradient-to-r from-yellow-50 to-yellow-100 rounded-lg">
-                  <div className="text-2xl font-bold text-yellow-600">{mockStats.averageRating}</div>
+                  <div className="text-2xl font-bold text-yellow-600">{getBusinessRating()}</div>
                   <div className="text-sm text-gray-600">Rating</div>
                 </div>
                 <div className="text-center p-3 bg-gradient-to-r from-purple-50 to-purple-100 rounded-lg">
@@ -717,24 +783,24 @@ export default function BusinessDetailPage() {
               <div className="flex flex-wrap items-center gap-6 text-sm text-gray-600">
                 <div className="flex items-center">
                   <MapPin className="w-4 h-4 mr-1" />
-                  {formatLocation(business.location)}
+                  {getBusinessLocation()}
                 </div>
                 <div className="flex items-center">
                   <Star className="w-4 h-4 mr-1 text-yellow-500" />
-                  {mockStats.averageRating} ({mockStats.totalReviews} reviews)
+                  {getBusinessRating()} ({mockStats.totalReviews} reviews)
                 </div>
                 <div className="flex items-center">
                   <Users className="w-4 h-4 mr-1" />
-                  {getCompanySizeLabel(business.companySize)}
+                  {getBusinessCompanySize()}
                 </div>
                 <div className="flex items-center">
                   <Eye className="w-4 h-4 mr-1" />
                   2.3M+ profile views
                 </div>
-                {business.foundedYear && (
+                {getBusinessFoundedYear() && (
                   <div className="flex items-center">
                     <Calendar className="w-4 h-4 mr-1" />
-                    Est. {business.foundedYear}
+                    Est. {getBusinessFoundedYear()}
                   </div>
                 )}
               </div>
@@ -772,16 +838,16 @@ export default function BusinessDetailPage() {
                   <div className="space-y-8">
                     {/* Description */}
                     <div>
-                      <h3 className="text-xl font-semibold text-gray-900 mb-4">About {business.businessName}</h3>
+                      <h3 className="text-xl font-semibold text-gray-900 mb-4">About {getBusinessName()}</h3>
                       <div className="prose max-w-none">
                         <p className="text-gray-600 mb-4">
-                          {showFullDescription ? business.description : 
-                            (business.description.length > 300 
-                              ? `${business.description.substring(0, 300)}...` 
-                              : business.description)
+                          {showFullDescription ? getBusinessDescription() : 
+                            (getBusinessDescription().length > 300 
+                              ? `${getBusinessDescription().substring(0, 300)}...` 
+                              : getBusinessDescription())
                           }
                         </p>
-                        {business.description.length > 300 && (
+                        {getBusinessDescription().length > 300 && (
                           <button
                             onClick={() => setShowFullDescription(!showFullDescription)}
                             className="text-[#9A9A4A] hover:text-[#8A8A3A] font-medium"
@@ -848,16 +914,16 @@ export default function BusinessDetailPage() {
                               <Building className="w-5 h-5 text-gray-400 mr-2" />
                               <span className="font-medium text-gray-700">Company Size</span>
                             </div>
-                            <span className="text-gray-600">{getCompanySizeLabel(business.companySize)}</span>
+                            <span className="text-gray-600">{getBusinessCompanySize()}</span>
                           </div>
                           
-                          {business.foundedYear && (
+                          {getBusinessFoundedYear() && (
                             <div className="p-4 bg-gray-50 rounded-lg">
                               <div className="flex items-center mb-2">
                                 <Calendar className="w-5 h-5 text-gray-400 mr-2" />
                                 <span className="font-medium text-gray-700">Founded</span>
                               </div>
-                              <span className="text-gray-600">{business.foundedYear}</span>
+                              <span className="text-gray-600">{getBusinessFoundedYear()}</span>
                             </div>
                           )}
                         </div>
@@ -868,7 +934,7 @@ export default function BusinessDetailPage() {
                               <MapPin className="w-5 h-5 text-gray-400 mr-2" />
                               <span className="font-medium text-gray-700">Location</span>
                             </div>
-                            <span className="text-gray-600">{formatLocation(business.location)}</span>
+                            <span className="text-gray-600">{getBusinessLocation()}</span>
                           </div>
                           
                           <div className="p-4 bg-gray-50 rounded-lg">
@@ -876,7 +942,7 @@ export default function BusinessDetailPage() {
                               <Award className="w-5 h-5 text-gray-400 mr-2" />
                               <span className="font-medium text-gray-700">Specialization</span>
                             </div>
-                            <span className="text-gray-600">{business.category}</span>
+                            <span className="text-gray-600">{getBusinessCategory()}</span>
                           </div>
                         </div>
                       </div>
@@ -1003,7 +1069,10 @@ export default function BusinessDetailPage() {
                           <MessageCircle className="w-5 h-5 mr-2" />
                           {isLoggedIn ? 'Request Custom Quote' : 'Login to Request Quote'}
                         </button>
-                        <button className="px-8 py-4 border-2 border-[#9A9A4A] text-[#9A9A4A] rounded-lg hover:bg-[#9A9A4A] hover:text-white transition-colors duration-200 font-medium">
+                        <button 
+                          onClick={() => setActiveTab('portfolio')}
+                          className="px-8 py-4 border-2 border-[#9A9A4A] text-[#9A9A4A] rounded-lg hover:bg-[#9A9A4A] hover:text-white transition-colors duration-200 font-medium"
+                        >
                           View Portfolio
                         </button>
                       </div>
@@ -1142,9 +1211,9 @@ export default function BusinessDetailPage() {
                     <div className="bg-gradient-to-r from-gray-50 to-gray-100 rounded-lg p-6">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div className="text-center">
-                          <div className="text-5xl font-bold text-gray-900 mb-2">{mockStats.averageRating}</div>
+                          <div className="text-5xl font-bold text-gray-900 mb-2">{getBusinessRating()}</div>
                           <div className="flex items-center justify-center mb-2">
-                            {renderStars(Math.floor(mockStats.averageRating))}
+                            {renderStars(Math.floor(getBusinessRating()))}
                           </div>
                           <div className="text-gray-600">Based on {mockStats.totalReviews} reviews</div>
                           <div className="text-sm text-green-600 font-medium mt-2">98% would recommend</div>
@@ -1215,10 +1284,10 @@ export default function BusinessDetailPage() {
                                   <div className="flex items-center mb-2">
                                     <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center mr-3">
                                       <span className="text-white text-xs font-bold">
-                                        {business.businessName.charAt(0)}
+                                        {getBusinessName().charAt(0)}
                                       </span>
                                     </div>
-                                    <span className="font-medium text-gray-900">Response from {business.businessName}</span>
+                                    <span className="font-medium text-gray-900">Response from {getBusinessName()}</span>
                                   </div>
                                   <p className="text-gray-600 text-sm pl-11">{review.businessResponse}</p>
                                 </div>
@@ -1258,7 +1327,7 @@ export default function BusinessDetailPage() {
 
                     {/* Review CTA */}
                     <div className="bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-200 rounded-lg p-6 text-center">
-                      <h4 className="text-lg font-semibold text-gray-900 mb-2">Have you worked with {business.businessName}?</h4>
+                      <h4 className="text-lg font-semibold text-gray-900 mb-2">Have you worked with {getBusinessName()}?</h4>
                       <p className="text-gray-600 mb-4">Share your experience to help other businesses make informed decisions.</p>
                       <button
                         onClick={handleEmailBusiness}
@@ -1350,23 +1419,23 @@ export default function BusinessDetailPage() {
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">Contact Information</h3>
                 
                 <div className="space-y-4">
-                  {business.socialMedia.website && (
+                  {socialMedia.website && (
                     <div className="flex items-center">
                       <Globe className="w-5 h-5 text-gray-400 mr-3 flex-shrink-0" />
                       <a 
-                        href={business.socialMedia.website.startsWith('http') ? business.socialMedia.website : `https://${business.socialMedia.website}`} 
+                        href={socialMedia.website.startsWith('http') ? socialMedia.website : `https://${socialMedia.website}`} 
                         target="_blank" 
                         rel="noopener noreferrer" 
                         className="text-[#9A9A4A] hover:text-[#8A8A3A] flex items-center break-all"
                       >
-                        {business.socialMedia.website}
+                        {socialMedia.website}
                         <ExternalLink className="w-4 h-4 ml-1 flex-shrink-0" />
                       </a>
                     </div>
                   )}
                   <div className="flex items-start">
                     <MapPin className="w-5 h-5 text-gray-400 mr-3 flex-shrink-0 mt-0.5" />
-                    <span className="text-gray-600 text-sm">{getFullAddress(business.location)}</span>
+                    <span className="text-gray-600 text-sm">{getBusinessLocation()}</span>
                   </div>
                 </div>
 
@@ -1432,7 +1501,7 @@ export default function BusinessDetailPage() {
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">Location</h3>
                 <div className="relative w-full h-48 rounded-lg overflow-hidden mb-4">
                   <iframe
-                    src={`https://maps.google.com/maps?q=${encodeURIComponent(formatLocation(business.location))}&t=&z=13&ie=UTF8&iwloc=&output=embed`}
+                    src={`https://maps.google.com/maps?q=${encodeURIComponent(getBusinessLocation())}&t=&z=13&ie=UTF8&iwloc=&output=embed`}
                     className="absolute top-0 left-0 w-full h-full border-0"
                     allowFullScreen
                     loading="lazy"
@@ -1442,10 +1511,10 @@ export default function BusinessDetailPage() {
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-gray-600 flex items-center">
                     <MapPin className="w-4 h-4 mr-1" />
-                    {formatLocation(business.location)}
+                    {getBusinessLocation()}
                   </span>
                   <a 
-                    href={`https://maps.google.com/?q=${encodeURIComponent(getFullAddress(business.location))}`}
+                    href={`https://maps.google.com/?q=${encodeURIComponent(getBusinessLocation())}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-[#9A9A4A] hover:text-[#8A8A3A] flex items-center"
@@ -1462,21 +1531,21 @@ export default function BusinessDetailPage() {
                 <div className="space-y-3">
                   <div className="flex justify-between">
                     <span className="text-gray-600">Industry:</span>
-                    <span className="text-gray-900 font-medium">{business.category}</span>
+                    <span className="text-gray-900 font-medium">{getBusinessCategory()}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">Company Size:</span>
-                    <span className="text-gray-900 font-medium">{getCompanySizeLabel(business.companySize)}</span>
+                    <span className="text-gray-900 font-medium">{getBusinessCompanySize()}</span>
                   </div>
-                  {business.foundedYear && (
+                  {getBusinessFoundedYear() && (
                     <div className="flex justify-between">
                       <span className="text-gray-600">Founded:</span>
-                      <span className="text-gray-900 font-medium">{business.foundedYear}</span>
+                      <span className="text-gray-900 font-medium">{getBusinessFoundedYear()}</span>
                     </div>
                   )}
                   <div className="flex justify-between">
                     <span className="text-gray-600">Location:</span>
-                    <span className="text-gray-900 font-medium">{formatLocation(business.location)}</span>
+                    <span className="text-gray-900 font-medium">{getBusinessLocation()}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">Profile Views:</span>
@@ -1523,7 +1592,7 @@ export default function BusinessDetailPage() {
       {/* Email Modal */}
       {showEmailModal && (
         <EmailModal 
-          businessId={business.id.timestamp.toString()}
+          businessId={getBusinessId()}
           onClose={() => setShowEmailModal(false)}
           isLoggedIn={isLoggedIn}
           user={user}

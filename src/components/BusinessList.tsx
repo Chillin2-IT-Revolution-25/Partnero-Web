@@ -71,13 +71,11 @@ export default function BusinessList({ isLoggedIn, onBusinessClick, onEmailBusin
     e.preventDefault()
     if (displaySearchTerm.trim() && !isSearching) {
       setIsSearching(true)
-      console.log(user?.business.businessId)
       
       // Check if user is logged in and we have their business ID
       if (isLoggedIn && user?.userId) {
         try {
           const request: RecommendationRequest = {
-            // business_id: user.userId,
             business_id: user.userId,
             prompt: displaySearchTerm.trim()
           }
