@@ -52,12 +52,20 @@ export interface BusinessLocation {
   
     async getBusinessById(id: string): Promise<BusinessData> {
       try {
-        const response = await fetch(`${this.baseUrl}/api/ApplicationUser/business/${id}`, {
+        const url = `${this.baseUrl}/api/ApplicationUser/business/${id}`
+        console.log('Fetching business data from:', url)
+        
+        const response = await fetch(url, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
+            // Add ngrok bypass header if using ngrok
+            'ngrok-skip-browser-warning': 'true',
           },
         })
+  
+        console.log('Response status:', response.status)
+        console.log('Response ok:', response.ok)
   
         if (!response.ok) {
           if (response.status === 404) {
@@ -66,20 +74,44 @@ export interface BusinessLocation {
               status: 404,
             })
           }
+          
+          // Try to get error details from response
+          let errorMessage = 'Failed to fetch business data'
+          try {
+            const errorText = await response.text()
+            if (errorText) {
+              errorMessage = errorText
+            }
+          } catch (e) {
+            console.log('Could not parse error response')
+          }
+          
           throw new ApiError({
-            message: 'Failed to fetch business data',
+            message: errorMessage,
             status: response.status,
           })
         }
   
         const data = await response.json()
+        console.log('Fetched business data:', data)
         return data
       } catch (error) {
+        console.error('Error in getBusinessById:', error)
+        
         if (error instanceof ApiError) {
           throw error
         }
+        
+        // Handle network errors
+        if (error instanceof TypeError && error.message.includes('fetch')) {
+          throw new ApiError({
+            message: 'Network error - could not connect to server',
+            status: 0,
+          })
+        }
+        
         throw new ApiError({
-          message: 'Network error occurred while fetching business data',
+          message: error instanceof Error ? error.message : 'Unknown error occurred',
           status: 0,
         })
       }
