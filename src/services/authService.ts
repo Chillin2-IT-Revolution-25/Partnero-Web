@@ -20,6 +20,7 @@ export interface LoginResponse {
     accessToken: string
     avatarUrl?: string
     businessInfo: {
+      businessId?: string // Added businessId
       name: string
       description: string
       location?: string
@@ -53,6 +54,7 @@ export interface RegisterResponse {
     accessToken: string
     avatarUrl?: string
     businessInfo: {
+      businessId?: string // Added businessId
       name: string
       description: string
       location?: string

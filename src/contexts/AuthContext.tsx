@@ -18,6 +18,7 @@ interface User {
     description: string
     location: string
     category: string
+    businessId: string // Added businessId field
   }
 }
 
@@ -89,7 +90,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             name: response.user.businessInfo.name,
             description: response.user.businessInfo.description,
             location: response.user.businessInfo.location || 'Not specified',
-            category: response.user.businessInfo.category
+            category: response.user.businessInfo.category,
+            businessId: response.user.businessInfo.businessId || '' // Added businessId
           }
         }
         
@@ -136,7 +138,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             name: response.user.businessInfo.name,
             description: response.user.businessInfo.description,
             location: response.user.businessInfo.location || 'Not specified',
-            category: response.user.businessInfo.category
+            category: response.user.businessInfo.category,
+            businessId: response.user.businessInfo.businessId || '' // Added businessId
           }
         }
         

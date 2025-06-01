@@ -21,6 +21,7 @@ export interface BusinessProfile {
   description: string
   location: string
   category: string
+  businessId: string // Added businessId field
   companySize?: string
   foundedYear?: number
   website?: string
@@ -82,7 +83,7 @@ export interface BusinessFilters {
   searchTerm?: string
 }
 
-// Component Props Types
+// Component Props Types - Updated User interface
 export interface BusinessCardProps {
   business: Business
   viewMode: 'grid' | 'list'
@@ -110,15 +111,49 @@ export interface EmailModalProps {
   isLoggedIn: boolean
 }
 
+// Updated User interface for profile modal
+export interface ProfileModalUser {
+  firstName: string
+  lastName: string
+  name: string
+  email: string
+  avatar: string
+  business: {
+    name: string
+    description: string
+    location: string
+    category: string
+    businessId: string // Added businessId field
+  }
+}
+
 export interface ProfileModalProps {
-  user: User
+  user: ProfileModalUser
   onClose: () => void
   onLogout: () => void
 }
 
+// Updated User interface for navbar
+export interface NavbarUser {
+  firstName: string
+  lastName: string
+  name: string
+  email: string
+  avatar: string
+  userId: string
+  accessToken: string
+  business: {
+    name: string
+    description: string
+    location: string
+    category: string
+    businessId: string // Added businessId field
+  }
+}
+
 export interface NavbarProps {
   isLoggedIn: boolean
-  user: User | null
+  user: NavbarUser | null
   onProfileClick: () => void
   onLogout: () => void
   onBrowseClick?: () => void

@@ -14,6 +14,7 @@ export interface AuthUser {
     description: string
     location: string
     category: string
+    businessId: string // Added businessId field
   }
 }
 
