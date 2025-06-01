@@ -384,29 +384,6 @@ We're passionate about helping businesses grow and thrive in the digital age. Wh
                   </>
                 )}
 
-                {/* Action Buttons Overlay */}
-                <div className="absolute top-4 right-4 flex space-x-2">
-                  <button
-                    onClick={handleLike}
-                    className={`p-3 rounded-full backdrop-blur-sm transition-colors duration-200 ${
-                      isLiked ? 'bg-red-500 text-white' : 'bg-white/90 text-gray-600 hover:bg-white'
-                    }`}
-                  >
-                    <Heart className={`w-5 h-5 ${isLiked ? 'fill-current' : ''}`} />
-                  </button>
-                  <button
-                    onClick={handleBookmark}
-                    className={`p-3 rounded-full backdrop-blur-sm transition-colors duration-200 ${
-                      isBookmarked ? 'bg-[#9A9A4A] text-white' : 'bg-white/90 text-gray-600 hover:bg-white'
-                    }`}
-                  >
-                    <Bookmark className={`w-5 h-5 ${isBookmarked ? 'fill-current' : ''}`} />
-                  </button>
-                  <button className="p-3 rounded-full bg-white/90 text-gray-600 hover:bg-white transition-colors duration-200">
-                    <Share2 className="w-5 h-5" />
-                  </button>
-                </div>
-
                 {/* Image Indicators */}
                 <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
                   {business.images.map((_, index) => (
@@ -512,7 +489,6 @@ We're passionate about helping businesses grow and thrive in the digital age. Wh
                 <nav className="flex space-x-8 px-6">
                   {[
                     { id: 'overview', label: 'Overview' },
-                    { id: 'portfolio', label: 'Portfolio' },
                     { id: 'reviews', label: 'Reviews' },
                     { id: 'pricing', label: 'Services & Pricing' }
                   ].map((tab) => (
@@ -591,46 +567,6 @@ We're passionate about helping businesses grow and thrive in the digital age. Wh
                           </div>
                         ))}
                       </div>
-                    </div>
-                  </div>
-                )}
-
-                {/* Portfolio Tab */}
-                {activeTab === 'portfolio' && (
-                  <div className="space-y-8">
-                    <h3 className="text-xl font-semibold text-gray-900">Recent Projects</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      {portfolio.map((project) => (
-                        <div key={project.id} className="bg-gray-50 rounded-lg overflow-hidden">
-                          <img
-                            src={project.image}
-                            alt={project.title}
-                            className="w-full h-48 object-cover"
-                          />
-                          <div className="p-6">
-                            <div className="flex items-center justify-between mb-2">
-                              <span className="bg-[#CACA78]/20 text-[#8A8A3A] text-xs px-2 py-1 rounded-full font-medium">
-                                {project.category}
-                              </span>
-                              <span className="text-sm text-gray-500">{project.completedDate}</span>
-                            </div>
-                            <h4 className="font-semibold text-gray-900 mb-2">{project.title}</h4>
-                            <p className="text-gray-600 text-sm mb-3">{project.description}</p>
-                            <div className="text-xs text-gray-500 mb-3">
-                              Client: {project.client} | Budget: {project.budget}
-                            </div>
-                            <div className="space-y-1">
-                              <p className="text-sm font-medium text-gray-900">Results:</p>
-                              {project.results.map((result, index) => (
-                                <div key={index} className="flex items-center text-xs text-gray-600">
-                                  <CheckCircle className="w-3 h-3 text-green-500 mr-2" />
-                                  {result}
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        </div>
-                      ))}
                     </div>
                   </div>
                 )}
@@ -807,7 +743,7 @@ We're passionate about helping businesses grow and thrive in the digital age. Wh
 
           {/* Right Column - Contact & Info */}
           <div className="lg:col-span-1">
-            <div className="sticky top-8 space-y-6">
+            <div className="sticky top-17 space-y-6">
               {/* Contact Card */}
               <div className="bg-white rounded-lg shadow-sm p-6">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">Contact Information</h3>
@@ -873,16 +809,32 @@ We're passionate about helping businesses grow and thrive in the digital age. Wh
                 </button>
               </div>
 
-              {/* Business Hours */}
+              {/* Location Map */}
               <div className="bg-white rounded-lg shadow-sm p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Business Hours</h3>
-                <div className="space-y-2">
-                  {Object.entries(business.businessHours).map(([day, hours]) => (
-                    <div key={day} className="flex justify-between text-sm">
-                      <span className="capitalize text-gray-600">{day}:</span>
-                      <span className="text-gray-900">{hours}</span>
-                    </div>
-                  ))}
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Location</h3>
+                <div className="relative w-full h-48 rounded-lg overflow-hidden">
+                  <iframe
+                    src={`https://maps.google.com/maps?q=new%20york&t=&z=13&ie=UTF8&iwloc=&output=embed`}
+                    className="absolute top-0 left-0 w-full h-full border-0"
+                    allowFullScreen
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                  ></iframe>
+                </div>
+                <div className="mt-3 flex items-center justify-between text-sm">
+                  <span className="text-gray-600 flex items-center">
+                    <MapPin className="w-4 h-4 mr-1" />
+                    {business.fullAddress}
+                  </span>
+                  <a 
+                    href={`https://maps.google.com/?q=${encodeURIComponent(business.fullAddress)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[#9A9A4A] hover:text-[#8A8A3A] flex items-center"
+                  >
+                    <ExternalLink className="w-4 h-4 mr-1" />
+                    View
+                  </a>
                 </div>
               </div>
 
@@ -906,34 +858,6 @@ We're passionate about helping businesses grow and thrive in the digital age. Wh
                     <span className="text-gray-600">Response Rate:</span>
                     <span className="text-green-600 font-medium">98%</span>
                   </div>
-                </div>
-              </div>
-
-              {/* Similar Businesses */}
-              <div className="bg-white rounded-lg shadow-sm p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Similar Partners</h3>
-                <div className="space-y-4">
-                  {[
-                    { name: 'TechFlow Solutions', category: 'Technology', rating: 4.9, image: '/api/placeholder/60/60' },
-                    { name: 'Fashion Forward', category: 'Fashion', rating: 4.6, image: '/api/placeholder/60/60' },
-                    { name: 'Wellness Collective', category: 'Health & Wellness', rating: 4.7, image: '/api/placeholder/60/60' }
-                  ].map((similar, index) => (
-                    <div key={index} className="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors duration-200">
-                      <img
-                        src={similar.image}
-                        alt={similar.name}
-                        className="w-12 h-12 rounded-lg object-cover"
-                      />
-                      <div className="flex-1">
-                        <p className="font-medium text-gray-900 text-sm">{similar.name}</p>
-                        <p className="text-xs text-gray-500">{similar.category}</p>
-                        <div className="flex items-center mt-1">
-                          <Star className="w-3 h-3 text-yellow-500 mr-1" />
-                          <span className="text-xs text-gray-600">{similar.rating}</span>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
                 </div>
               </div>
 
