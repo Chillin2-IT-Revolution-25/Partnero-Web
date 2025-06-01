@@ -1,81 +1,30 @@
-'use client'
-
-import { Inter } from 'next/font/google'
-import { useState, useEffect } from 'react'
-import { usePathname, useRouter } from 'next/navigation'
-import './globals.css'
-import Navbar from '@/components/Navbar'
-import Footer from '@/components/Footer'
-import ProfileModal from '@/components/ProfileModal'
-import { AuthProvider, useAuth } from '@/contexts/AuthContext'
-import { initAOS, refreshAOS } from '@/utils/aosUtils'
 import 'aos/dist/aos.css'
+import type { Metadata } from 'next'
+import ClientLayout from './ClientLayout'
+import './globals.css'
 
-const inter = Inter({ subsets: ['latin'] })
 
-function LayoutContent({ children }: { children: React.ReactNode }) {
-  const { isLoggedIn, user, logout, updateUser } = useAuth()
-  const [showProfileModal, setShowProfileModal] = useState(false)
-  const pathname = usePathname()
-  const router = useRouter()
-
-  // Initialize AOS
-  useEffect(() => {
-    initAOS()
-  }, [])
-
-  // Refresh AOS on route change
-  useEffect(() => {
-    refreshAOS()
-  }, [pathname])
-
-  // Pages that should not show header/footer (auth pages)
-  const hideHeaderFooter = pathname?.startsWith('/auth/') || false
-
-  const handleLogout = () => {
-    logout()
-    setShowProfileModal(false)
-  }
-
-  const handleProfileClick = () => {
-    setShowProfileModal(true)
-  }
-
-  const handleBrowseClick = () => {
-    router.push('/browse')
-  }
-
-  return (
-    <div className="min-h-screen flex flex-col">
-      {/* Conditionally render Navbar */}
-      {!hideHeaderFooter && (
-        <Navbar 
-          isLoggedIn={isLoggedIn}
-          user={user}
-          onProfileClick={handleProfileClick}
-          onLogout={handleLogout}
-          onBrowseClick={handleBrowseClick}
-        />
-      )}
-
-      {/* Main content */}
-      <main className="flex-1">
-        {children}
-      </main>
-
-      {/* Conditionally render Footer */}
-      {!hideHeaderFooter && <Footer />}
-
-      {/* Profile Modal */}
-      {showProfileModal && !hideHeaderFooter && user && (
-        <ProfileModal 
-          user={user}
-          onClose={() => setShowProfileModal(false)}
-          onLogout={handleLogout}
-        />
-      )}
-    </div>
-  )
+export const metadata: Metadata = {
+  title: {
+    template: '%s | Partnero',
+    default: 'Partnero - Business Partnership Platform'
+  },
+  description: 'Connect with businesses and creators for meaningful partnerships',
+  keywords: ['business partnerships', 'collaboration', 'influencer marketing'],
+  authors: [{ name: 'Partnero Team' }],
+  creator: 'Partnero',
+  publisher: 'Partnero',
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1
+    }
+  },
 }
 
 export default function RootLayout({
@@ -85,12 +34,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} antialiased`}>
-        <AuthProvider>
-          <LayoutContent>
-            {children}
-          </LayoutContent>
-        </AuthProvider>
+      <body>
+        <ClientLayout>{children}</ClientLayout>
       </body>
     </html>
   )

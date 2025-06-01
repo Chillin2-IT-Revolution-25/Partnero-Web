@@ -7,6 +7,19 @@ export default function Footer() {
 
   const handleSocialClick = (platform: string) => {
     console.log(`Open ${platform}`)
+    switch (platform) {
+      case 'github':
+        window.location.href = 'https://github.com/Chillin2-IT-Revolution-25/Partnero-Web';
+        break;
+      case 'facebook':
+        window.location.href = 'URL_ADDRESS.facebook.com/';
+        break;
+      case 'instagram':
+        window.location.href = 'URL_ADDRESS.instagram.com/';
+        break;
+      default:
+        break;
+    }
   }
 
   return (
@@ -16,7 +29,7 @@ export default function Footer() {
         @import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;500;600&display=swap');
       `}</style>
       
-      <footer className="py-4 sm:py-6" style={{ backgroundColor: '#CACA78' }}>
+      <footer className="py-3 sm:py-5" style={{ backgroundColor: '#CACA78' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Mobile Layout (stacked) */}
           <div className="block sm:hidden">
