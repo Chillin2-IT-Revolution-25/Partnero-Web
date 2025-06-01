@@ -84,26 +84,20 @@ export interface RecommendationRequest {
       }
     }
   
-    // Helper method to get the first image URL from business
     getBusinessImageUrl(business: RecommendationBusiness): string {
       return business.BusinessImageUrls?.[0] || '/api/placeholder/300/200'
     }
   
-    // Helper method to format location display
     formatLocation(location: BusinessLocation): string {
       const parts = [location.City, location.State, location.Country].filter(part => part && part !== '-')
       return parts.join(', ') || location.DisplayName || 'Location not specified'
     }
   
-    // Helper method to get business owner name (using UserId for now)
     getBusinessOwnerName(business: RecommendationBusiness): string {
-      // In the future, you might want to fetch actual user names
-      // For now, we'll use the business name or a placeholder
       return `Owner of ${business.BusinessName}`
     }
   }
   
-  // Custom error class
   export class ApiError extends Error {
     status: number
   
@@ -114,7 +108,6 @@ export interface RecommendationRequest {
     }
   }
   
-  // Export singleton instance
   export const recommendationsService = new RecommendationsService()
   
   export default RecommendationsService

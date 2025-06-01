@@ -15,7 +15,7 @@ export interface Business {
 
 export const mockBusinesses: Business[] = [
   {
-    id: '3',
+    id: '1',
     name: 'Wellness Collective',
     description: 'Health and wellness brand seeking fitness influencers and nutrition content creators. Our mission is to promote holistic wellness through natural products and lifestyle coaching.',
     category: 'Health & Wellness',
@@ -28,7 +28,7 @@ export const mockBusinesses: Business[] = [
     isRecent: true
   },
   {
-    id: '4',
+    id: '2',
     name: 'Fashion Forward',
     description: 'Sustainable fashion brand collaborating with style influencers and eco-conscious creators. We create trendy, environmentally responsible clothing for the modern consumer.',
     category: 'Fashion',
@@ -41,7 +41,7 @@ export const mockBusinesses: Business[] = [
     isRecent: false
   },
   {
-    id: '5',
+    id: '3',
     name: 'Gourmet Kitchen',
     description: 'Restaurant chain looking for food bloggers and cooking content creators for partnerships. We offer authentic, locally-sourced cuisine with a focus on sustainability and flavor.',
     category: 'Food & Beverage',
@@ -54,7 +54,7 @@ export const mockBusinesses: Business[] = [
     isRecent: true
   },
   {
-    id: '6',
+    id: '4',
     name: 'EcoTech Innovations',
     description: 'Sustainable technology company seeking environmentally conscious creators and tech reviewers. We develop eco-friendly solutions for modern technology challenges.',
     category: 'Technology',
@@ -67,7 +67,7 @@ export const mockBusinesses: Business[] = [
     isRecent: false
   },
   {
-    id: '7',
+    id: '5',
     name: 'Artisan Coffee Co.',
     description: 'Specialty coffee roaster and café chain seeking food and lifestyle content creators. We source ethically-grown beans and create unique coffee experiences for our community.',
     category: 'Food & Beverage',
@@ -80,7 +80,7 @@ export const mockBusinesses: Business[] = [
     isRecent: true
   },
   {
-    id: '8',
+    id: '6',
     name: 'Luxury Travel Agency',
     description: 'Premium travel service specializing in curated experiences and luxury destinations. Seeking travel influencers and lifestyle content creators for exclusive partnerships.',
     category: 'Travel',
